@@ -880,6 +880,23 @@
           }
         }
       }
+    },
+    "Quit Loopmural": {
+      "comment": "Menu bar context menu item that terminates Loopmural.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit Loopmural"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loopmuralを終了"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
