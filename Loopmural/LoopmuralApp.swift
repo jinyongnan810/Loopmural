@@ -5,8 +5,8 @@
 //  Created by Yuunan kin on 2026/10/12.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct LoopmuralApp: App {
