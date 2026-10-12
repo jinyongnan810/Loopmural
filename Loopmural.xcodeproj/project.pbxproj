@@ -6,6 +6,10 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3F9CC28C307CEFA200EE24F3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3F9CC28B307CEFA200EE24F3 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3F1DCD70307CEB02008E3CFD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		3F1DCD60307CEB01008E3CFD /* Loopmural.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Loopmural.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1DCD6F307CEB02008E3CFD /* LoopmuralTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoopmuralTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1DCD79307CEB02008E3CFD /* LoopmuralUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoopmuralUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F9CC28B307CEFA200EE24F3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -72,6 +77,7 @@
 				3F1DCD62307CEB01008E3CFD /* Loopmural */,
 				3F1DCD72307CEB02008E3CFD /* LoopmuralTests */,
 				3F1DCD7C307CEB02008E3CFD /* LoopmuralUITests */,
+				3F9CC28B307CEFA200EE24F3 /* README.md */,
 				3F1DCD61307CEB01008E3CFD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -197,6 +203,7 @@
 		3F1DCD5E307CEB01008E3CFD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				3F9CC28C307CEFA200EE24F3 /* README.md in Resources */,
 			);
 		};
 		3F1DCD6D307CEB02008E3CFD /* Resources */ = {
@@ -377,6 +384,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -409,6 +417,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

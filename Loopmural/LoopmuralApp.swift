@@ -1,32 +1,35 @@
-//
-//  LoopmuralApp.swift
-//  Loopmural
-//
-//  Created by Yuunan kin on 2026/10/12.
-//
-
-import SwiftData
+import AppKit
 import SwiftUI
 
 @main
 struct LoopmuralApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @NSApplicationDelegateAdaptor(LoopmuralDelegate.self) private var delegate
+    @State private var library = WallpaperLibrary.shared
+    @State private var login = LaunchAtLoginManager()
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        MenuBarExtra {
+            ContentView(library: library, login: login)
+        } label: {
+            Label("Loopmural", systemImage: "play.rectangle")
         }
-        .modelContainer(sharedModelContainer)
+        .menuBarExtraStyle(.window)
+
+        Settings {
+            LoopmuralSettingsView(library: library, login: login)
+        }
+    }
+}
+
+@MainActor
+final class LoopmuralDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+        Task { await WallpaperLibrary.shared.restoreWallpaper() }
+    }
+
+    func applicationWillTerminate(_: Notification) {
+        // Preserve the selected wallpaper and playback preference for next launch.
+        WallpaperLibrary.shared.engine.shutdown()
     }
 }
