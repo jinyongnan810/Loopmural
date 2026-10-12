@@ -48,12 +48,41 @@ struct LoopmuralSettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            PrivacySettingsSection()
         }
         .formStyle(.grouped)
-        .frame(width: 450, height: 470)
+        .frame(width: 450, height: 580)
         .onAppear { login.refresh() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             login.refresh()
         }
+    }
+}
+
+private struct PrivacySettingsSection: View {
+    @Environment(\.locale) private var locale
+
+    var body: some View {
+        Section("Privacy & Security") {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Link(destination: privacyPolicyURL) {
+                    Label("View Privacy Policy", systemImage: "arrow.up.right.square")
+                        .font(.caption)
+                }
+            }
+        }
+    }
+
+    private var privacyPolicyURL: URL {
+        let fileName = locale.language.languageCode?.identifier == "ja"
+            ? "PRIVACY_POLICY_JA.md"
+            : "PRIVACY_POLICY.md"
+        return URL(string: "https://github.com/jinyongnan810/Loopmural/blob/main/")!
+            .appendingPathComponent(fileName)
     }
 }

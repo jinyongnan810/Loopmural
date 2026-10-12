@@ -897,6 +897,57 @@
           }
         }
       }
+    },
+    "Privacy & Security": {
+      "comment": "Settings section containing the local-data explanation and privacy policy link.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy & Security"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プライバシーとセキュリティ"
+          }
+        }
+      }
+    },
+    "View Privacy Policy": {
+      "comment": "Link that opens the privacy policy in the browser.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View Privacy Policy"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プライバシーポリシーを見る"
+          }
+        }
+      }
+    },
+    "Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics.": {
+      "comment": "Privacy summary shown in Settings.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動画とライブラリのデータはこのMacに保存されます。Loopmuralは動画をアップロードせず、トラッキングやアクセス解析も行いません。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
