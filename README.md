@@ -28,6 +28,16 @@
 
 Loopmural must remain running to display moving wallpaper. It uses non-interactive windows behind desktop icons; it does not replace macOS's system wallpaper configuration or change the lock-screen wallpaper. Placement with Spaces, Mission Control, and Stage Manager can vary by macOS version.
 
+### Where to Find Copied Videos
+
+Loopmural stores imported video copies in its sandboxed local library:
+
+```text
+~/Library/Containers/com.kinn.Loopmural/Data/Library/Application Support/Loopmural/Videos
+```
+
+In Finder, press **Cmd + Shift + G**, paste the path above, and press **Return**. Copies use UUID filenames ending in `.mp4`. Your original videos remain untouched; removing a video from Loopmural deletes only its imported copy and library record.
+
 ---
 
 ## 📁 Project Structure
