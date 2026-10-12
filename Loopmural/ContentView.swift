@@ -118,7 +118,8 @@ private struct NowPlayingView: View {
                             .foregroundStyle(.secondary)
                     } else {
                         Label("Playing", systemImage: "circle.fill")
-                            .foregroundStyle(.mint)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.accentColor)
                     }
                 }
             }
@@ -142,6 +143,7 @@ private struct NowPlayingView: View {
                             library.togglePaused()
                         } label: {
                             Image(systemName: library.engine.isPaused ? "play.fill" : "pause.fill")
+                                .foregroundStyle(Color.accentColor)
                         }
                         .help(library.engine.isPaused ? Text("Resume wallpaper") : Text("Pause wallpaper"))
                         .accessibilityLabel(library.engine.isPaused ? Text("Resume wallpaper") : Text("Pause wallpaper"))
@@ -274,7 +276,7 @@ private struct VideoRow: View {
         .liquidGlassEffect(in: RoundedRectangle(cornerRadius: 10))
         .overlay {
             RoundedRectangle(cornerRadius: 10)
-                .strokeBorder(Color.accentColor.opacity(isSelected ? 0.5 : 0), lineWidth: 1)
+                .strokeBorder(Color.accentColor.opacity(isSelected ? 1 : 0), lineWidth: 2)
                 .allowsHitTesting(false)
         }
         .onHover { isHovered = $0 }
