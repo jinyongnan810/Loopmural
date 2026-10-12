@@ -1,48 +1,148 @@
-# Loopmural
+# Loopmural - macOS Menu Bar Video Wallpaper App
 
-A local macOS menu bar app that plays MP4 videos behind desktop icons.
+**Loopmural** is a lightweight, modern, and privacy-focused macOS status bar application that turns your MP4 videos into moving desktop wallpapers. Built with SwiftUI, SwiftData, AVFoundation, ServiceManagement, and Apple's Liquid Glass visual language.
 
-## Use
+![macOS](https://img.shields.io/badge/macOS-15.0%2B-blue)
+![Swift](https://img.shields.io/badge/Swift-5.0-orange)
+![SwiftUI](https://img.shields.io/badge/SwiftUI-SwiftData-purple)
+![Localization](https://img.shields.io/badge/Languages-English%20%7C%20Japanese-green)
 
-1. Open Loopmural.xcodeproj in Xcode and run the Loopmural scheme on My Mac.
-2. Click the play-rectangle icon in the menu bar.
-3. Click + to import one or more MP4 files.
-4. Click a video's play button to set it as wallpaper on all connected displays.
-5. Use the current wallpaper's pause/resume and stop buttons to control playback.
-6. Open Settings with the gear button and enable Launch at Login to start automatically when signing in.
+---
 
-For normal use, install the signed app in Applications before enabling Launch at Login. If macOS requests approval, use the Open Login Items Settings button. Loopmural reads the actual SMAppService status and displays registration errors.
+## 🌟 Key Features
 
-Restore Last Wallpaper is enabled by default. The selected video and pause preference survive relaunch. Stop clears the startup selection. Quit closes the desktop windows while preserving the selection for the next launch.
+- 🖥️ **Menu Bar Integration**: Lives in the macOS status bar with a custom template icon and zero Dock clutter (`LSUIElement = true`).
+- 🖱️ **Right-Click Context Menu**: Right-click or `Ctrl+Click` the status bar icon for **Settings** (`Cmd+,`) and **Quit Loopmural** (`Cmd+Q`). Settings opens with the app activated in the foreground.
+- 🎬 **MP4 Video Library**: Import one or more playable MP4 files, browse thumbnails and durations, and set a video as your wallpaper. Repeated imports of the same source path, size, and modification date are skipped.
+- 📁 **Persistent Local Copies**: Imported videos are copied into app storage, so moving or deleting the original MP4 does not break playback. SwiftData stores library metadata and thumbnails.
+- 🔁 **Looping Video Wallpaper**: Continuously loops each video with AVFoundation. Audio is always muted.
+- 🖥️ **Multiple Display Support**: Creates a separate player and desktop window for each connected display. Videos fill the screen with aspect-ratio-preserving cropping. Display changes rebuild the wallpaper windows.
+- ⏯️ **Playback Controls**: Pause, resume, or stop the wallpaper from the popover. Stop clears the startup selection; Quit preserves it for next time.
+- 💤 **Sleep-Aware Playback**: Pauses during display sleep, system sleep, and inactive user sessions without changing your saved pause preference.
+- 🔄 **Restore Last Wallpaper**: Optionally restore the last selected video when the app opens. Enabled by default; paused wallpapers remain paused.
+- 🎨 **Liquid Glass UI Styling**: Uses macOS 26+ Liquid Glass effects with material fallbacks on macOS 15.
+- 🗑️ **Video Removal Confirmation**: Deletes only Loopmural's imported copy and library record after confirmation. Your original MP4 remains untouched.
+- 🚀 **Launch at Login**: Optional auto-launch when you sign in, using Apple's `SMAppService`. Settings displays registration errors and required macOS approval.
+- 🔒 **Local & Private**: Video playback, library storage, and preferences stay on your Mac. No analytics, advertising, telemetry, or app-managed cloud synchronization.
+- 🌐 **Multilingual Support**: English and Japanese translations using Apple's String Catalog (`Localizable.xcstrings`).
 
-## Library
+Loopmural must remain running to display moving wallpaper. It uses non-interactive windows behind desktop icons; it does not replace macOS's system wallpaper configuration or change the lock-screen wallpaper. Placement with Spaces, Mission Control, and Stage Manager can vary by macOS version.
 
-Imported MP4s are copied into the app's Application Support directory under Loopmural/Videos. SwiftData stores library metadata and thumbnails. Playback never depends on the original file remaining at its original location.
+---
 
-Import skips repeated selections of the same source path, size, and modification date. An updated source can be imported as a new entry. Unsupported, unreadable, or invalid videos produce an error in the popover.
+## 📁 Project Structure
 
-Removing a video requires confirmation and removes only Loopmural's copy and library record. Original MP4 files are never deleted.
+```text
+Loopmural/
+├── Loopmural/
+│   ├── LoopmuralApp.swift                     # MenuBarExtra, Settings scene, and app lifecycle
+│   ├── ContentView.swift                      # Video library, playback controls, and overlays
+│   ├── LoopmuralSettingsView.swift            # Login and wallpaper restoration settings
+│   ├── WallpaperLibrary.swift                 # Import, copies, persistence, thumbnails, and removal
+│   ├── WallpaperVideo.swift                   # SwiftData video metadata model
+│   ├── WallpaperEngine.swift                  # Desktop windows, looping players, and sleep handling
+│   ├── LaunchAtLoginManager.swift             # ServiceManagement registration and status
+│   ├── MenuBarExtraRightClickMonitor.swift    # Native status bar context menu
+│   ├── LiquidGlassStyle.swift                 # Liquid Glass styling with material fallbacks
+│   ├── LoopmuralIcon.swift                    # Header and menu bar template icons
+│   ├── Localizable.xcstrings                  # English and Japanese translations
+│   ├── Assets.xcassets/                       # Logo layers and accent color
+│   └── AppIcon.icon/                          # Layered application icon
+├── Loopmural.xcodeproj/
+│   └── xcshareddata/xcschemes/                # Shared scheme for local and cloud builds
+├── LoopmuralTests/                            # Unit test target
+├── LoopmuralUITests/                          # UI test target
+├── .github/
+│   ├── workflows/release.yml                 # Version bump, production merge, tag, and release
+│   └── scripts/bump_version.py               # App and test-target marketing version updates
+├── Makefile                                  # SwiftFormat command (make lint)
+├── AGENTS.md                                 # Repository development rules
+├── PRIVACY_POLICY.md                         # Privacy policy (English)
+├── PRIVACY_POLICY_JA.md                       # Privacy policy (Japanese)
+├── LICENSE                                   # PolyForm Noncommercial License 1.0.0
+└── README.md                                 # Project documentation
+```
 
-## Playback
+---
 
-- Borderless, non-interactive AppKit windows sit above the desktop background and below desktop icons.
-- Each display has its own AVQueuePlayer, AVPlayerLooper, and AVPlayerLayer.
-- Videos fill the screen with aspect-ratio-preserving cropping and always play muted.
-- Display changes rebuild the windows. Display sleep, system sleep, and inactive user sessions suspend playback without changing the user's pause preference.
-- The app must remain running. This does not install a system video wallpaper or change the lock screen.
-- Spaces, Mission Control, and Stage Manager placement should be checked on each supported macOS release.
+## 🛠️ Tech Stack & Architecture
 
-The implementation follows C2V's MenuBarExtra window scene, SwiftData persistence, accessory app mode, and ServiceManagement login registration. It keeps the deployment target and signing settings selected by the project creator.
+- **Language**: Swift 5 language mode
+- **UI Framework**: SwiftUI (macOS 15.0+)
+- **Menu Bar Engine**: `MenuBarExtra` (`.window` style) with local `NSEvent` monitoring
+- **Desktop Windows**: Borderless AppKit windows above the desktop background and below desktop icons, ignoring mouse input
+- **Video Playback**: `AVQueuePlayer`, `AVPlayerLooper`, and `AVPlayerLayer`, with one player per display
+- **Data Persistence**: SwiftData for metadata and thumbnails, app-local MP4 copies, and `UserDefaults` for selection and preferences
+- **System Integration**: `SMAppService.mainApp` for login registration and `NSWorkspace` notifications for sleep and session changes
+- **Design System**: Liquid Glass effects and button styles on macOS 26+, with material and button-style fallbacks
+- **Localization**: String Catalog (`.xcstrings`) with English and Japanese translations
 
-## Development
+---
 
-Run make lint after Swift changes. Use Xcode MCP BuildProject for build verification. Do not run test suites unless requested, per AGENTS.md.
+## 📥 Download
 
-Main files:
-- LoopmuralApp.swift: menu bar and settings scenes, application lifecycle.
-- WallpaperVideo.swift: persistent video metadata.
-- WallpaperLibrary.swift: import, storage, removal, and startup restoration.
-- WallpaperEngine.swift: desktop windows, video looping, and sleep/display handling.
-- ContentView.swift: menu bar library and playback controls.
-- LaunchAtLoginManager.swift: SMAppService status and registration.
-- LoopmuralSettingsView.swift: startup and playback settings.
+Build Loopmural from source using the instructions below. Version tags and release notes are available on the [GitHub Releases page](https://github.com/jinyongnan810/Loopmural/releases).
+
+The release workflow publishes tags and notes; it does not build or upload an app binary.
+
+---
+
+## 💻 Requirements & Building
+
+### Prerequisites
+
+- macOS 15.0 (Sequoia) or later to run the app
+- Xcode 27 for the current project format and SDK
+- A valid signing configuration for installation and distribution
+
+### Building & Running
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/jinyongnan810/Loopmural.git
+   cd Loopmural
+   ```
+
+2. Open `Loopmural.xcodeproj` in Xcode.
+3. Select the **Loopmural** scheme and destination **My Mac**.
+4. Press `Cmd + R` to build and run.
+5. Click the Loopmural menu bar icon, then **+** to import MP4 files.
+6. Click a video's play button to set it as wallpaper.
+7. Open **Settings** from the header or context menu to configure startup behavior.
+
+Install the signed app in **Applications** before enabling **Launch at Login** for everyday use. If approval is required, use **Open Login Items Settings** to complete it in macOS System Settings.
+
+### Releases & Xcode Cloud
+
+The manually triggered **Release** GitHub Actions workflow follows C2V's release flow: choose `patch`, `minor`, `major`, or `keep`; update marketing versions when needed; fast-forward `main` into `production`; and publish a tag with categorized release notes. `keep` deletes and recreates the latest release and tag.
+
+For Xcode Cloud, the selected branch must contain the committed shared scheme at `Loopmural.xcodeproj/xcshareddata/xcschemes/Loopmural.xcscheme`. Archive with the **Loopmural** scheme. The app's App Store category is **Utilities**.
+
+---
+
+## 🎨 Code Formatting & Quality
+
+Code formatting uses SwiftFormat. To lint and format all Swift files, run:
+
+```bash
+make lint
+```
+
+Follow [AGENTS.md](AGENTS.md): use Xcode MCP for build verification and project configuration, and do not run test suites unless requested.
+
+---
+
+## 🛡️ Privacy Policy
+
+Loopmural stores imported video copies, thumbnails, library metadata, and preferences locally on your Mac. It does not upload your videos or include tracking or analytics. See the [Privacy Policy (English)](PRIVACY_POLICY.md) or [プライバシーポリシー (日本語)](PRIVACY_POLICY_JA.md) for details.
+
+---
+
+## 📄 License
+
+Loopmural is source-available under the [PolyForm Noncommercial License 1.0.0](LICENSE).
+
+You may use, copy, modify, and redistribute the software for noncommercial purposes under the license terms. When redistributing, include the license text or its URL and the required copyright notice. Commercial use requires separate permission from the copyright holder. See [LICENSE](LICENSE) for the full terms, including the permissions for noncommercial organizations.
+
+The repository license does not restrict the copyright holder's own distribution of Loopmural. Third-party components, if any, remain subject to their own licenses.
