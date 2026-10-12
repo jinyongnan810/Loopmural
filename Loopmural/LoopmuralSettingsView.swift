@@ -1,10 +1,14 @@
 import AppKit
 import SwiftUI
 
+/// Shows startup preferences and playback information.
 struct LoopmuralSettingsView: View {
+    /// The shared video library and playback state.
+    /// Manages launch at login preferences.
     @Bindable var library: WallpaperLibrary
     let login: LaunchAtLoginManager
 
+    /// Builds startup, playback, storage, and privacy settings.
     var body: some View {
         Form {
             Section("Startup") {
@@ -60,9 +64,12 @@ struct LoopmuralSettingsView: View {
     }
 }
 
+/// Shows privacy information and the policy link.
 private struct PrivacySettingsSection: View {
+    /// The locale used to choose the privacy policy language.
     @Environment(\.locale) private var locale
 
+    /// Builds the privacy notice and policy link.
     var body: some View {
         Section("Privacy & Security") {
             VStack(alignment: .leading, spacing: 6) {
@@ -78,6 +85,7 @@ private struct PrivacySettingsSection: View {
         }
     }
 
+    /// The privacy policy link for the current language.
     private var privacyPolicyURL: URL {
         let fileName = locale.language.languageCode?.identifier == "ja"
             ? "PRIVACY_POLICY_JA.md"

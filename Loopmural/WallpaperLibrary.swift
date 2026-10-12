@@ -5,34 +5,52 @@ import Observation
 import SwiftData
 import UniformTypeIdentifiers
 
+/// Manages imported videos, saved preferences, and wallpaper playback.
 @MainActor
 @Observable
 final class WallpaperLibrary {
+    /// The shared instance used throughout the app.
     static let shared = WallpaperLibrary()
 
+    /// Imported videos ordered from newest to oldest.
     private(set) var videos: [WallpaperVideo] = []
+    /// The identifier of the selected wallpaper video.
     private(set) var selectedID: UUID?
+    /// Whether video imports are in progress.
     private(set) var isImporting = false
+    /// Whether a wallpaper change is in progress.
     private(set) var isApplying = false
+    /// Cached preview images keyed by video identifier.
     private(set) var thumbnails: [UUID: NSImage] = [:]
+    /// The latest error to show to the user.
     var errorMessage: String?
+    /// The video awaiting removal confirmation.
     var pendingRemoval: WallpaperVideo?
+    /// Plays wallpaper videos across connected displays.
     let engine = WallpaperEngine()
+    /// Whether to restore the last wallpaper when the app opens.
     var restoreOnLaunch: Bool {
         didSet { UserDefaults.standard.set(restoreOnLaunch, forKey: "restoreOnLaunch") }
     }
 
+    /// The SwiftData store for video metadata.
+    /// The folder containing app-owned video copies.
+    /// The active file picker, if one is open.
+    /// Stores wallpaper selection and playback preferences.
     @ObservationIgnored private var container: ModelContainer?
     @ObservationIgnored private var directory: URL?
     @ObservationIgnored private var importPanel: NSOpenPanel?
     @ObservationIgnored private let defaults = UserDefaults.standard
 
+    /// The library video matching the selected identifier.
     var selectedVideo: WallpaperVideo? {
         videos.first { $0.id == selectedID }
     }
 
+    /// Whether an import or wallpaper change is in progress.
     var isBusy: Bool { isImporting || isApplying }
 
+    /// Opens local storage and loads saved wallpaper preferences.
     private init() {
         restoreOnLaunch = UserDefaults.standard.object(forKey: "restoreOnLaunch") as? Bool ?? true
         selectedID = UserDefaults.standard.string(forKey: "selectedVideoID").flatMap(UUID.init(uuidString:))
@@ -57,11 +75,13 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Restores the saved wallpaper and pause state when enabled.
     func restoreWallpaper() async {
         guard restoreOnLaunch, let video = selectedVideo else { return }
         await apply(video, paused: defaults.bool(forKey: "wallpaperPaused"))
     }
 
+    /// Opens a file picker to import MP4 videos.
     func chooseFiles() {
         guard !isBusy, importPanel == nil, container != nil else { return }
         errorMessage = nil
@@ -83,6 +103,7 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Starts the selected video and saves its playback preferences.
     func apply(_ video: WallpaperVideo, paused: Bool = false) async {
         guard !isApplying else { return }
         isApplying = true
@@ -104,11 +125,13 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Toggles playback and saves the pause preference.
     func togglePaused() {
         engine.setPaused(!engine.isPaused)
         defaults.set(engine.isPaused, forKey: "wallpaperPaused")
     }
 
+    /// Stops playback and clears the saved wallpaper selection.
     func stopWallpaper() {
         engine.stop()
         selectedID = nil
@@ -116,6 +139,7 @@ final class WallpaperLibrary {
         defaults.removeObject(forKey: "wallpaperPaused")
     }
 
+    /// Deletes a video’s metadata and app-owned file.
     func remove(_ video: WallpaperVideo) {
         guard !isBusy, let context = container?.mainContext else { return }
         do {
@@ -141,6 +165,7 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Reloads video metadata and cached thumbnails from storage.
     private func refresh() throws {
         guard let context = container?.mainContext else { throw WallpaperError.libraryUnavailable }
         videos = try context.fetch(FetchDescriptor<WallpaperVideo>(
@@ -153,11 +178,13 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Resolves the path to a video’s app-owned copy.
     private func videoURL(_ video: WallpaperVideo) throws -> URL {
         guard let directory else { throw WallpaperError.libraryUnavailable }
         return directory.appendingPathComponent(video.fileName)
     }
 
+    /// Copies, validates, and saves selected MP4 files to the library.
     private func importFiles(_ urls: [URL]) async {
         guard !isBusy, let context = container?.mainContext, let directory else { return }
         isImporting = true
@@ -220,6 +247,7 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Creates a PNG preview frame when video decoding succeeds.
     private func makeThumbnail(asset: AVAsset, duration: Double) async -> Data? {
         let generator = AVAssetImageGenerator(asset: asset)
         generator.appliesPreferredTrackTransform = true

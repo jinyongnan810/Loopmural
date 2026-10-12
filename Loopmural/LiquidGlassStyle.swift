@@ -12,7 +12,7 @@ enum LiquidGlassVariant {
 }
 
 extension View {
-    /// Applies official macOS 26+ Liquid Glass effect (.clear or .regular), falling back to materials on earlier versions.
+    /// Adds Liquid Glass on macOS 26 or a material background on earlier versions.
     @ViewBuilder
     func liquidGlassEffect(_ variant: LiquidGlassVariant = .clear, in shape: some Shape) -> some View {
         if #available(macOS 26.0, *) {
@@ -30,7 +30,7 @@ extension View {
         }
     }
 
-    /// Applies official macOS 26+ Liquid Glass button style or standard macOS fallback.
+    /// Uses glass buttons on macOS 26 or bordered buttons on earlier versions.
     @ViewBuilder
     func liquidGlassButtonStyle(isProminent: Bool = false, tint: Color? = nil) -> some View {
         if #available(macOS 26.0, *) {

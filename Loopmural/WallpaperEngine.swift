@@ -7,9 +7,18 @@ import Observation
 @MainActor
 @Observable
 final class WallpaperEngine {
+    /// Whether a wallpaper video is active.
     private(set) var hasWallpaper = false
+    /// Whether playback was paused by the user.
     private(set) var isPaused = false
+    /// Whether sleep or session inactivity prevents playback.
     private(set) var isSuspended = false
+    /// Reports wallpaper playback failures.
+    /// The wallpaper players and windows for connected displays.
+    /// The video file used by the current wallpaper.
+    /// Notification tokens and their owning centers.
+    /// The active reasons for suspending playback.
+    /// Identifies the latest playback request to ignore stale work.
     @ObservationIgnored var onFailure: ((String) -> Void)?
     @ObservationIgnored private var sessions: [WallpaperSession] = []
     @ObservationIgnored private var currentURL: URL?
@@ -17,6 +26,7 @@ final class WallpaperEngine {
     @ObservationIgnored private var suspensionReasons: Set<String> = []
     @ObservationIgnored private var generation = UUID()
 
+    /// Observes display changes, sleep, and session activity.
     init() {
         observe(NSApplication.didChangeScreenParametersNotification, center: .default) { engine in
             engine.rebuildScreens()
@@ -30,6 +40,7 @@ final class WallpaperEngine {
         observe(NSWorkspace.sessionDidBecomeActiveNotification, center: workspace) { $0.resume("session") }
     }
 
+    /// Validates the video and starts wallpaper playback on all displays.
     func start(url: URL, paused: Bool = false) async throws {
         let request = UUID()
         generation = request
@@ -50,12 +61,14 @@ final class WallpaperEngine {
         rebuildScreens()
     }
 
+    /// Updates the user’s pause preference and playback state.
     func setPaused(_ paused: Bool) {
         guard hasWallpaper else { return }
         isPaused = paused
         updatePlayback()
     }
 
+    /// Cancels pending playback and closes all wallpaper windows.
     func stop() {
         generation = UUID()
         closeSessions()
@@ -64,6 +77,7 @@ final class WallpaperEngine {
         isPaused = false
     }
 
+    /// Stops playback and removes all notification observers.
     func shutdown() {
         stop()
         for (center, token) in observers {
@@ -72,6 +86,7 @@ final class WallpaperEngine {
         observers.removeAll()
     }
 
+    /// Recreates display sessions while preserving the playback position.
     private func rebuildScreens() {
         guard let url = currentURL else { return }
         let time = sessions.first?.player.currentTime() ?? .zero
@@ -94,6 +109,7 @@ final class WallpaperEngine {
         updatePlayback()
     }
 
+    /// Closes and removes every display session.
     private func closeSessions() {
         for session in sessions {
             session.close()
@@ -101,18 +117,21 @@ final class WallpaperEngine {
         sessions.removeAll()
     }
 
+    /// Adds a suspension reason and pauses playback.
     private func suspend(_ reason: String) {
         suspensionReasons.insert(reason)
         isSuspended = true
         updatePlayback()
     }
 
+    /// Clears a suspension reason and updates playback.
     private func resume(_ reason: String) {
         suspensionReasons.remove(reason)
         isSuspended = !suspensionReasons.isEmpty
         updatePlayback()
     }
 
+    /// Plays or pauses each session based on the current state.
     private func updatePlayback() {
         for session in sessions {
             if isPaused || isSuspended {
@@ -123,6 +142,7 @@ final class WallpaperEngine {
         }
     }
 
+    /// Registers a notification handler on the main actor.
     private func observe(
         _ name: Notification.Name,
         center: NotificationCenter,
@@ -138,14 +158,21 @@ final class WallpaperEngine {
     }
 }
 
+/// Owns wallpaper playback for one display.
 @MainActor
 private final class WallpaperSession {
+    /// The muted queue player for this display.
     let player = AVQueuePlayer()
+    /// The desktop window that shows this display’s wallpaper.
     let window: DesktopWallpaperWindow
+    /// Keeps the wallpaper video playing in a loop.
     private let looper: AVPlayerLooper
+    /// Watches the looper for playback failures.
     private var statusObservation: NSKeyValueObservation?
+    /// Watches for video items that fail during playback.
     private var failureObserver: NSObjectProtocol?
 
+    /// Creates a looping player and desktop window for one display.
     init(url: URL, screen: NSScreen, onFailure: @escaping @MainActor (String) -> Void) {
         player.isMuted = true
         looper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: url))
@@ -187,6 +214,7 @@ private final class WallpaperSession {
         }
     }
 
+    /// Releases playback observers, player items, and the wallpaper window.
     func close() {
         statusObservation?.invalidate()
         statusObservation = nil
@@ -202,16 +230,22 @@ private final class WallpaperSession {
     }
 }
 
+/// Displays wallpaper without taking keyboard focus.
 @MainActor
 private final class DesktopWallpaperWindow: NSWindow {
+    /// Prevents the wallpaper window from receiving keyboard focus.
     override var canBecomeKey: Bool { false }
+    /// Prevents the wallpaper window from becoming the main window.
     override var canBecomeMain: Bool { false }
 }
 
+/// Draws the video player layer inside the wallpaper window.
 @MainActor
 private final class WallpaperPlayerView: NSView {
+    /// The layer that renders wallpaper video frames.
     private let playerLayer = AVPlayerLayer()
 
+    /// Creates a view backed by the supplied video player.
     init(player: AVPlayer) {
         super.init(frame: .zero)
         wantsLayer = true
@@ -220,11 +254,13 @@ private final class WallpaperPlayerView: NSView {
         layer?.addSublayer(playerLayer)
     }
 
+    /// Prevents creation from a storyboard or archive.
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("WallpaperPlayerView must be created with a player.")
     }
 
+    /// Fits the video layer to the view without implicit animations.
     override func layout() {
         super.layout()
         CATransaction.begin()
@@ -233,16 +269,19 @@ private final class WallpaperPlayerView: NSView {
         CATransaction.commit()
     }
 
+    /// Disconnects the video player from its rendering layer.
     func detachPlayer() {
         playerLayer.player = nil
     }
 }
 
+/// Describes video validation and library errors.
 enum WallpaperError: LocalizedError {
     case invalidVideo
     case libraryUnavailable
     case missingFile
 
+    /// The localized message for this error.
     var errorDescription: String? {
         switch self {
         case .invalidVideo:

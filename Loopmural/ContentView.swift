@@ -5,10 +5,14 @@ import SwiftUI
     ContentView(library: .shared, login: LaunchAtLoginManager())
 }
 
+/// Shows the wallpaper library in the menu bar popover.
 struct ContentView: View {
+    /// The shared video library and playback state.
     let library: WallpaperLibrary
+    /// Manages launch at login preferences.
     let login: LaunchAtLoginManager
 
+    /// Builds the library popover and removal confirmation overlay.
     var body: some View {
         VStack(spacing: 0) {
             LibraryHeader(isImporting: library.isImporting, isBusy: library.isBusy) {
@@ -43,13 +47,19 @@ struct ContentView: View {
     }
 }
 
+/// Shows the app title, import button, and settings shortcut.
 private struct LibraryHeader: View {
+    /// Opens the SwiftUI settings window.
     @Environment(\.openSettings) private var openSettings
 
+    /// Whether video imports are in progress.
     let isImporting: Bool
+    /// Whether an import or wallpaper change is in progress.
     let isBusy: Bool
+    /// Opens the video import flow.
     let onImport: () -> Void
 
+    /// Builds the title and import and settings controls.
     var body: some View {
         HStack(spacing: 10) {
             Image(nsImage: LoopmuralIcon.image)
@@ -96,9 +106,12 @@ private struct LibraryHeader: View {
     }
 }
 
+/// Shows the current wallpaper and playback controls.
 private struct NowPlayingView: View {
+    /// The shared video library and playback state.
     let library: WallpaperLibrary
 
+    /// Builds the current wallpaper preview and playback controls.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -183,9 +196,12 @@ private struct NowPlayingView: View {
     }
 }
 
+/// Lists imported videos or an import prompt.
 private struct VideoLibraryView: View {
+    /// The shared video library and playback state.
     let library: WallpaperLibrary
 
+    /// Builds the video list or empty-library prompt.
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -224,15 +240,24 @@ private struct VideoLibraryView: View {
     }
 }
 
+/// Shows a video preview with playback and removal actions.
 private struct VideoRow: View {
+    /// The library video shown in this row.
     let video: WallpaperVideo
+    /// The thumbnail image, when available.
     let image: NSImage?
+    /// Whether this video is the selected wallpaper.
     let isSelected: Bool
+    /// Whether an import or wallpaper change is in progress.
     let isBusy: Bool
+    /// Sets this video as the wallpaper.
     let onSet: () -> Void
+    /// Requests removal of this video.
     let onRemove: () -> Void
+    /// Whether the pointer is over this row.
     @State private var isHovered = false
 
+    /// Builds the video row and its hover and context menu actions.
     var body: some View {
         HStack(spacing: 10) {
             VideoThumbnail(image: image)
@@ -287,9 +312,12 @@ private struct VideoRow: View {
     }
 }
 
+/// Shows a video thumbnail or a placeholder.
 private struct VideoThumbnail: View {
+    /// The thumbnail image, when available.
     let image: NSImage?
 
+    /// Builds the thumbnail image or film placeholder.
     var body: some View {
         ZStack {
             Color.black.opacity(0.12)
@@ -310,9 +338,12 @@ private struct VideoThumbnail: View {
     }
 }
 
+/// Shows the video count and quit button.
 private struct LibraryFooter: View {
+    /// The number of imported videos.
     let count: Int
 
+    /// Builds the video count and quit control.
     var body: some View {
         HStack {
             Text("\(count) videos")
@@ -326,10 +357,14 @@ private struct LibraryFooter: View {
     }
 }
 
+/// Shows an error message with a dismiss button.
 struct ErrorBanner: View {
+    /// The error message to display.
     let message: String
+    /// Dismisses the displayed error.
     let onDismiss: () -> Void
 
+    /// Builds the error message and dismiss control.
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             Image(systemName: "exclamationmark.triangle.fill")
@@ -355,11 +390,16 @@ struct ErrorBanner: View {
     }
 }
 
+/// Asks for confirmation before removing a library video.
 private struct RemoveVideoOverlay: View {
+    /// The video name shown to the user.
     let name: String
+    /// Requests removal of this video.
     let onRemove: () -> Void
+    /// Cancels the removal request.
     let onCancel: () -> Void
 
+    /// Builds the removal confirmation dialog.
     var body: some View {
         ZStack {
             Color.black.opacity(0.25)

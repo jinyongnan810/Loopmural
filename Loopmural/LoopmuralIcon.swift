@@ -1,7 +1,9 @@
 import AppKit
 
+/// Creates template icons for the app and menu bar.
 @MainActor
 enum LoopmuralIcon {
+    /// The combined template icon for the library header.
     static let image: NSImage = {
         let screen = NSImage(resource: .loopmuralScreen)
         let loop = NSImage(resource: .loopmuralLoop)
@@ -16,6 +18,7 @@ enum LoopmuralIcon {
         return icon
     }()
 
+    /// The smaller template icon sized for the menu bar.
     static let menuBarImage: NSImage = {
         let icon = (image.copy() as? NSImage) ?? image
         icon.size = NSSize(width: 18, height: 13)

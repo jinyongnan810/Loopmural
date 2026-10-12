@@ -1,17 +1,22 @@
 import AppKit
 
-/// Matches C2V's native context menu while leaving ordinary clicks to MenuBarExtra.
+/// Opens a native context menu for menu bar right-clicks and Control-clicks.
 @MainActor
 final class MenuBarExtraRightClickMonitor: NSObject {
+    /// The shared instance used throughout the app.
     static let shared = MenuBarExtraRightClickMonitor()
 
+    /// Opens settings from the menu bar context menu.
     var onOpenSettings: (() -> Void)?
+    /// The token for the local mouse event monitor.
     private var eventMonitor: Any?
 
+    /// Creates the shared menu bar event monitor.
     override private init() {
         super.init()
     }
 
+    /// Intercepts right-clicks and Control-clicks on the menu bar button.
     func startMonitoring() {
         guard eventMonitor == nil else { return }
         eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.rightMouseDown, .leftMouseDown]) { [weak self] event in
@@ -29,6 +34,7 @@ final class MenuBarExtraRightClickMonitor: NSObject {
         }
     }
 
+    /// Removes the event monitor and clears the settings action.
     func stopMonitoring() {
         if let eventMonitor {
             NSEvent.removeMonitor(eventMonitor)
@@ -37,6 +43,7 @@ final class MenuBarExtraRightClickMonitor: NSObject {
         onOpenSettings = nil
     }
 
+    /// Finds the status bar button within a view hierarchy.
     private func findStatusBarButton(in view: NSView) -> NSStatusBarButton? {
         if let button = view as? NSStatusBarButton {
             return button
@@ -49,6 +56,7 @@ final class MenuBarExtraRightClickMonitor: NSObject {
         return nil
     }
 
+    /// Shows the settings and quit actions beside the menu bar button.
     private func showContextMenu(for button: NSStatusBarButton, event: NSEvent) {
         let menu = NSMenu()
         let settings = NSMenuItem(
@@ -73,10 +81,12 @@ final class MenuBarExtraRightClickMonitor: NSObject {
         NSMenu.popUpContextMenu(menu, with: event, for: button)
     }
 
+    /// Runs the registered settings action.
     @objc private func openSettings() {
         onOpenSettings?()
     }
 
+    /// Terminates the application.
     @objc private func quitApp() {
         NSApp.terminate(nil)
     }
