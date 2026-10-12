@@ -29,7 +29,7 @@ struct ContentView: View {
             LibraryFooter(count: library.videos.count)
         }
         .frame(width: 420, height: 580)
-        .background(.regularMaterial)
+        .liquidGlassEffect(in: Rectangle())
         .overlay {
             if let video = library.pendingRemoval {
                 RemoveVideoOverlay(name: video.name) {
@@ -67,14 +67,17 @@ private struct LibraryHeader: View {
             }
             Button(action: onImport) {
                 Image(systemName: "plus")
-                    .frame(width: 24, height: 24)
+                    .frame(width: 28, height: 28)
+                    .liquidGlassEffect(in: Circle())
             }
+            .buttonStyle(.plain)
             .disabled(isBusy)
             .help("Import MP4 files")
             .accessibilityLabel("Import MP4 files")
             SettingsLink {
                 Image(systemName: "gearshape")
-                    .frame(width: 24, height: 24)
+                    .frame(width: 28, height: 28)
+                    .liquidGlassEffect(in: Circle())
             }
             .simultaneousGesture(TapGesture().onEnded {
                 NSApp.activate(ignoringOtherApps: true)
@@ -84,6 +87,7 @@ private struct LibraryHeader: View {
             .buttonStyle(.plain)
         }
         .padding(16)
+        .liquidGlassEffect(in: Rectangle())
     }
 }
 
@@ -168,7 +172,7 @@ private struct NowPlayingView: View {
             }
         }
         .padding(14)
-        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
+        .liquidGlassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
     }
 }
 
@@ -262,8 +266,12 @@ private struct VideoRow: View {
             .accessibilityLabel(Text("Remove \(video.name) from library"))
         }
         .padding(8)
-        .background(isSelected ? Color.accentColor.opacity(0.08) : Color.clear,
-                    in: RoundedRectangle(cornerRadius: 10))
+        .liquidGlassEffect(in: RoundedRectangle(cornerRadius: 10))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(Color.accentColor.opacity(isSelected ? 0.5 : 0), lineWidth: 1)
+                .allowsHitTesting(false)
+        }
         .onHover { isHovered = $0 }
         .contextMenu {
             Button("Set as Wallpaper", action: onSet).disabled(isBusy)
@@ -331,7 +339,12 @@ struct ErrorBanner: View {
             .accessibilityLabel("Dismiss error")
         }
         .padding(12)
-        .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+        .liquidGlassEffect(.regular, in: RoundedRectangle(cornerRadius: 10))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(Color.orange.opacity(0.35), lineWidth: 1)
+                .allowsHitTesting(false)
+        }
     }
 }
 
@@ -351,11 +364,14 @@ private struct RemoveVideoOverlay: View {
                     Spacer()
                     Button("Cancel", action: onCancel)
                         .keyboardShortcut(.cancelAction)
+                        .liquidGlassButtonStyle()
                     Button("Remove", role: .destructive, action: onRemove)
+                        .liquidGlassButtonStyle(isProminent: true, tint: .red)
                 }
             }
             .padding(24)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .liquidGlassEffect(.regular, in: RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.2), radius: 16, y: 8)
             .padding(28)
         }
     }
