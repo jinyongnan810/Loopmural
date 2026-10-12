@@ -32,9 +32,15 @@ struct LoopmuralSettingsView: View {
             }
 
             Section("Playback & Storage") {
-                LabeledContent("Audio", value: "Always muted")
-                LabeledContent("Displays", value: "All connected displays")
-                LabeledContent("Sizing", value: "Fill screen")
+                LabeledContent("Audio") {
+                    Text("Always muted")
+                }
+                LabeledContent("Displays") {
+                    Text("All connected displays")
+                }
+                LabeledContent("Sizing") {
+                    Text("Fill screen")
+                }
                 Text("Playback pauses while your displays sleep or your user session is inactive.")
                     .font(.caption)
                     .foregroundStyle(.secondary)

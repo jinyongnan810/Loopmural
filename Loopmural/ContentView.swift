@@ -72,6 +72,16 @@ private struct LibraryHeader: View {
             .disabled(isBusy)
             .help("Import MP4 files")
             .accessibilityLabel("Import MP4 files")
+            SettingsLink {
+                Image(systemName: "gearshape")
+                    .frame(width: 24, height: 24)
+            }
+            .simultaneousGesture(TapGesture().onEnded {
+                NSApp.activate(ignoringOtherApps: true)
+            })
+            .help("Settings")
+            .accessibilityLabel("Settings")
+            .buttonStyle(.plain)
         }
         .padding(16)
     }
@@ -170,7 +180,7 @@ private struct VideoLibraryView: View {
             HStack {
                 Text("YOUR VIDEOS").font(.caption).fontWeight(.semibold)
                 Spacer()
-                Text("\(library.videos.count)").font(.caption).monospacedDigit()
+                Text(library.videos.count, format: .number).font(.caption).monospacedDigit()
             }
             .foregroundStyle(.secondary)
             if library.videos.isEmpty {
@@ -294,14 +304,6 @@ private struct LibraryFooter: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()
-            SettingsLink {
-                Image(systemName: "gearshape")
-            }
-            .simultaneousGesture(TapGesture().onEnded {
-                NSApp.activate(ignoringOtherApps: true)
-            })
-            .help("Settings")
-            .accessibilityLabel("Settings")
             Button("Quit") { NSApp.terminate(nil) }
         }
         .buttonStyle(.plain)
