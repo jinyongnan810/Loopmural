@@ -11,7 +11,9 @@ struct LoopmuralApp: App {
         MenuBarExtra {
             ContentView(library: library, login: login)
         } label: {
-            Label("Loopmural", systemImage: "play.rectangle")
+            Image(nsImage: LoopmuralIcon.menuBarImage)
+                .renderingMode(.template)
+                .accessibilityLabel("Loopmural")
         }
         .menuBarExtraStyle(.window)
 

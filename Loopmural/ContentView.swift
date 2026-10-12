@@ -50,9 +50,11 @@ private struct LibraryHeader: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: "play.rectangle.fill")
-                .font(.title2)
-                .foregroundStyle(.tint)
+            Image(nsImage: LoopmuralIcon.image)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 28, height: 28)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Loopmural").font(.headline)
