@@ -44,6 +44,8 @@ struct ContentView: View {
 }
 
 private struct LibraryHeader: View {
+    @Environment(\.openSettings) private var openSettings
+
     let isImporting: Bool
     let isBusy: Bool
     let onImport: () -> Void
@@ -76,14 +78,15 @@ private struct LibraryHeader: View {
             .disabled(isBusy)
             .help("Import MP4 files")
             .accessibilityLabel("Import MP4 files")
-            SettingsLink {
+            Button {
+                // Activate before opening, matching C2V’s settings presentation.
+                NSApp.activate(ignoringOtherApps: true)
+                openSettings()
+            } label: {
                 Image(systemName: "gearshape")
                     .frame(width: 28, height: 28)
                     .liquidGlassEffect(in: Circle())
             }
-            .simultaneousGesture(TapGesture().onEnded {
-                NSApp.activate(ignoringOtherApps: true)
-            })
             .help("Settings")
             .accessibilityLabel("Settings")
             .buttonStyle(.plain)
