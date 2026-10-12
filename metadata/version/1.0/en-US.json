@@ -1,0 +1,7 @@
+{
+  "description": "Turn your own MP4 videos into moving desktop wallpapers with Loopmural, a lightweight macOS menu bar app.\n\nImport videos into your local library and choose one to play continuously behind your desktop icons. Playback is always muted, and Loopmural supports multiple connected displays with aspect-ratio-preserving cropping.\n\nFEATURES\n- Import multiple MP4 files and browse thumbnails and durations.\n- Pause, resume, or stop your wallpaper from the menu bar.\n- Keep independent local copies so moving the original files does not interrupt playback.\n- Restore your last wallpaper when the app opens.\n- Optionally launch at login.\n- Pause playback during display sleep, system sleep, and inactive user sessions.\n- Use the app in English or Japanese.\n\nPRIVATE BY DESIGN\nYour videos, library, and preferences stay on your Mac. No accounts, analytics, advertising, or app-managed cloud synchronization.\n\nLoopmural must remain running to display moving wallpaper. It does not change your lock-screen wallpaper. Videos are supplied by you; no video catalog is included.",
+  "keywords": "desktop,loop,background,menu bar,personalization,display,animated,motion,screen",
+  "promotionalText": "Bring your desktop to life with your own MP4 videos. Looping, muted wallpapers, multiple display support, and a private local library—all from your menu bar.",
+  "marketingUrl": "https://github.com/jinyongnan810/Loopmural",
+  "supportUrl": "https://github.com/jinyongnan810/Loopmural"
+}
