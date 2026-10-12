@@ -142,14 +142,11 @@ private struct NowPlayingView: View {
                 VideoThumbnail(image: library.thumbnails[video.id])
                     .frame(height: 136)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                Text(video.name)
-                    .font(.headline)
-                    .lineLimit(1)
-                    .help(video.name)
                 HStack {
-                    Text("Muted · Loops on all displays")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Text(video.name)
+                        .font(.headline)
+                        .lineLimit(1)
+                        .help(video.name)
                     Spacer()
                     if library.engine.hasWallpaper {
                         Button {

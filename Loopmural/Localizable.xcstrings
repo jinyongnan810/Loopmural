@@ -1,954 +1,955 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "%lld videos": {
-      "localizations": {
-        "en": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld video"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld videos" : {
+      "comment" : "Number of imported videos in the library footer.",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld video"
                 }
               },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld videos"
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld videos"
                 }
               }
             }
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld本の動画"
-          }
-        }
-      },
-      "comment": "Number of imported videos in the library footer."
-    },
-    "A little motion for your desktop": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A little motion for your desktop"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "デスクトップに、さりげない動きを"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld本の動画"
           }
         }
       }
     },
-    "All connected displays": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All connected displays"
+    "A little motion for your desktop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A little motion for your desktop"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接続されているすべてのディスプレイ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デスクトップに、さりげない動きを"
           }
         }
       }
     },
-    "Allow Loopmural in System Settings to finish enabling launch at login.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Allow Loopmural in System Settings to finish enabling launch at login."
+    "All connected displays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All connected displays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ログイン時の自動起動を有効にするには、システム設定でLoopmuralを許可してください。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続されているすべてのディスプレイ"
           }
         }
       }
     },
-    "Always muted": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Always muted"
+    "Allow Loopmural in System Settings to finish enabling launch at login." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Loopmural in System Settings to finish enabling launch at login."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "常に消音"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログイン時の自動起動を有効にするには、システム設定でLoopmuralを許可してください。"
           }
         }
       }
     },
-    "Audio": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audio"
+    "Always muted" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Always muted"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "音声"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常に消音"
           }
         }
       }
     },
-    "Cancel": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
+    "Audio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "キャンセル"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音声"
           }
         }
       }
     },
-    "Choose a playable MP4 with a video track and a finite duration.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose a playable MP4 with a video track and a finite duration."
+    "Cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "映像が含まれている、再生可能なMP4ファイルを選択してください。再生時間が確定している必要があります。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
           }
         }
       }
     },
-    "Dismiss error": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dismiss error"
+    "Choose a playable MP4 with a video track and a finite duration." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a playable MP4 with a video track and a finite duration."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "エラーメッセージを閉じる"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "映像が含まれている、再生可能なMP4ファイルを選択してください。再生時間が確定している必要があります。"
           }
         }
       }
     },
-    "Displays": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Displays"
+    "Dismiss error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dismiss error"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ディスプレイ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーメッセージを閉じる"
           }
         }
       }
     },
-    "Fill screen": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fill screen"
+    "Displays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "画面全体に表示"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ディスプレイ"
           }
         }
       }
     },
-    "Import": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import"
+    "Fill screen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill screen"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "読み込む"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面全体に表示"
           }
         }
       }
     },
-    "Import MP4 Files…": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import MP4 Files…"
+    "Import" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MP4ファイルを読み込む…"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込む"
           }
         }
       }
     },
-    "Import MP4 files": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import MP4 files"
+    "Import an MP4, then set it as your wallpaper." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import an MP4, then set it as your wallpaper."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MP4ファイルを読み込む"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4ファイルを読み込んで、壁紙に設定しましょう。"
           }
         }
       }
     },
-    "Import an MP4, then set it as your wallpaper.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import an MP4, then set it as your wallpaper."
+    "Import MP4 files" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import MP4 files"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MP4ファイルを読み込んで、壁紙に設定しましょう。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4ファイルを読み込む"
           }
         }
       }
     },
-    "Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy."
+    "Import MP4 Files…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import MP4 Files…"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "読み込んだMP4ファイルはLoopmuralのローカルストレージにコピーされます。動画を削除すると、そのコピーだけが削除されます。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4ファイルを読み込む…"
           }
         }
       }
     },
-    "Importing videos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing videos"
+    "Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画を読み込み中"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだMP4ファイルはLoopmuralのローカルストレージにコピーされます。動画を削除すると、そのコピーだけが削除されます。"
           }
         }
       }
     },
-    "Launch at Login": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Launch at Login"
+    "Importing videos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing videos"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ログイン時に起動"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画を読み込み中"
           }
         }
       }
     },
-    "Loopmural": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loopmural"
+    "Launch at Login" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Launch at Login"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loopmural"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログイン時に起動"
           }
         }
       }
     },
-    "MP4 files are copied into your local Loopmural library.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MP4 files are copied into your local Loopmural library."
+    "Loopmural" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmural"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MP4ファイルは、このMac上のLoopmuralライブラリにコピーされます。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmural"
           }
         }
       }
     },
-    "Muted · Loops on all displays": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Muted · Loops on all displays"
+    "MP4 files are copied into your local Loopmural library." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4 files are copied into your local Loopmural library."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "消音・すべての画面でループ再生"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4ファイルは、このMac上のLoopmuralライブラリにコピーされます。"
           }
         }
       }
     },
-    "ON YOUR DESKTOP": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ON YOUR DESKTOP"
+    "Muted · Loops on all displays" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muted · Loops on all displays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "現在の壁紙"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "消音・すべての画面でループ再生"
           }
         }
       }
     },
-    "Open Login Items Settings": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Login Items Settings"
+    "ON YOUR DESKTOP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ON YOUR DESKTOP"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ログイン項目の設定を開く"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在の壁紙"
           }
         }
       }
     },
-    "Pause wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause wallpaper"
+    "Open Login Items Settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Login Items Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "壁紙を一時停止"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログイン項目の設定を開く"
           }
         }
       }
     },
-    "Paused": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paused"
+    "Pause wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "一時停止中"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙を一時停止"
           }
         }
       }
     },
-    "Playback & Storage": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playback & Storage"
+    "Paused" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "再生とストレージ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一時停止中"
           }
         }
       }
     },
-    "Playback pauses while your displays sleep or your user session is inactive.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playback pauses while your displays sleep or your user session is inactive."
+    "Playback & Storage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback & Storage"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ディスプレイのスリープ中や、ユーザーセッションが非アクティブな間は再生を一時停止します。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生とストレージ"
           }
         }
       }
     },
-    "Playing": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playing"
+    "Playback pauses while your displays sleep or your user session is inactive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback pauses while your displays sleep or your user session is inactive."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "再生中"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ディスプレイのスリープ中や、ユーザーセッションが非アクティブな間は再生を一時停止します。"
           }
         }
       }
     },
-    "Quit": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit"
+    "Playing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "終了"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生中"
           }
         }
       }
     },
-    "Remove": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove"
+    "Privacy & Security" : {
+      "comment" : "Settings section containing the local-data explanation and privacy policy link.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy & Security"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プライバシーとセキュリティ"
           }
         }
       }
     },
-    "Remove %@ from library": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove %@ from library"
+    "Quit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "「%@」をライブラリから削除"
-          }
-        }
-      },
-      "comment": "The placeholder is the user-provided video filename without its extension."
-    },
-    "Remove from Library…": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove from Library…"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ライブラリから削除…"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了"
           }
         }
       }
     },
-    "Remove from library": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove from library"
+    "Quit Loopmural" : {
+      "comment" : "Menu bar context menu item that terminates Loopmural.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit Loopmural"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ライブラリから削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmuralを終了"
           }
         }
       }
     },
-    "Remove video?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove video?"
+    "Remove" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画を削除しますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
           }
         }
       }
     },
-    "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched."
+    "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched." : {
+      "comment" : "The placeholder is the user-provided video filename without its extension.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "「%@」をライブラリから削除しますか？Loopmuralのコピーだけが削除されます。元のMP4ファイルは削除されません。"
-          }
-        }
-      },
-      "comment": "The placeholder is the user-provided video filename without its extension."
-    },
-    "Restore Last Wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore Last Wallpaper"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "前回の壁紙を復元"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」をライブラリから削除しますか？Loopmuralのコピーだけが削除されます。元のMP4ファイルは削除されません。"
           }
         }
       }
     },
-    "Restore your last selected video when Loopmural opens. A paused wallpaper stays paused.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore your last selected video when Loopmural opens. A paused wallpaper stays paused."
+    "Remove %@ from library" : {
+      "comment" : "The placeholder is the user-provided video filename without its extension.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %@ from library"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loopmuralの起動時に、前回選択した動画を復元します。一時停止していた壁紙は、一時停止したまま復元されます。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」をライブラリから削除"
           }
         }
       }
     },
-    "Resume wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resume wallpaper"
+    "Remove from library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from library"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "壁紙の再生を再開"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリから削除"
           }
         }
       }
     },
-    "Set %@ as wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set %@ as wallpaper"
+    "Remove from Library…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from Library…"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "「%@」を壁紙に設定"
-          }
-        }
-      },
-      "comment": "The placeholder is the user-provided video filename without its extension."
-    },
-    "Set Wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set Wallpaper"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "壁紙に設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリから削除…"
           }
         }
       }
     },
-    "Set as Wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set as Wallpaper"
+    "Remove video?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove video?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "壁紙に設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画を削除しますか？"
           }
         }
       }
     },
-    "Set as wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set as wallpaper"
+    "Restore Last Wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Last Wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "壁紙に設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前回の壁紙を復元"
           }
         }
       }
     },
-    "Settings": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "Restore your last selected video when Loopmural opens. A paused wallpaper stays paused." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore your last selected video when Loopmural opens. A paused wallpaper stays paused."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmuralの起動時に、前回選択した動画を復元します。一時停止していた壁紙は、一時停止したまま復元されます。"
           }
         }
       }
     },
-    "Sizing": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sizing"
+    "Resume wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "表示方法"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙の再生を再開"
           }
         }
       }
     },
-    "Sleeping": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sleeping"
+    "Set %@ as wallpaper" : {
+      "comment" : "The placeholder is the user-provided video filename without its extension.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set %@ as wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "スリープ中"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」を壁紙に設定"
           }
         }
       }
     },
-    "Start Loopmural automatically when you sign in to your Mac.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start Loopmural automatically when you sign in to your Mac."
+    "Set as wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set as wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Macへのログイン時にLoopmuralを自動的に起動します。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙に設定"
           }
         }
       }
     },
-    "Startup": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Startup"
+    "Set as Wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set as Wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "起動"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙に設定"
           }
         }
       }
     },
-    "Stop wallpaper": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stop wallpaper"
+    "Set Wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "壁紙の再生を停止"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙に設定"
           }
         }
       }
     },
-    "The video library could not be opened. Restart Loopmural and try again.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The video library could not be opened. Restart Loopmural and try again."
+    "Settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画ライブラリを開けませんでした。Loopmuralを再起動して、もう一度お試しください。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
           }
         }
       }
     },
-    "This library video is missing. Remove it and import the MP4 again.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This library video is missing. Remove it and import the MP4 again."
+    "Sizing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sizing"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この動画のファイルが見つかりません。ライブラリから削除して、MP4ファイルをもう一度読み込んでください。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示方法"
           }
         }
       }
     },
-    "Video playback failed.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Video playback failed."
+    "Sleeping" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleeping"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画を再生できませんでした。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スリープ中"
           }
         }
       }
     },
-    "Videos are copied locally. Your original files stay untouched.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Videos are copied locally. Your original files stay untouched."
+    "Start Loopmural automatically when you sign in to your Mac." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Loopmural automatically when you sign in to your Mac."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画はこのMacにコピーされます。元のファイルは変更されません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macへのログイン時にLoopmuralを自動的に起動します。"
           }
         }
       }
     },
-    "YOUR VIDEOS": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "YOUR VIDEOS"
+    "Startup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startup"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画ライブラリ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起動"
           }
         }
       }
     },
-    "Your desktop, brought to life": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your desktop, brought to life"
+    "Stop wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop wallpaper"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "デスクトップに動きを"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙の再生を停止"
           }
         }
       }
     },
-    "Quit Loopmural": {
-      "comment": "Menu bar context menu item that terminates Loopmural.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit Loopmural"
+    "The video library could not be opened. Restart Loopmural and try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The video library could not be opened. Restart Loopmural and try again."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loopmuralを終了"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画ライブラリを開けませんでした。Loopmuralを再起動して、もう一度お試しください。"
           }
         }
       }
     },
-    "Privacy & Security": {
-      "comment": "Settings section containing the local-data explanation and privacy policy link.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Privacy & Security"
+    "This library video is missing. Remove it and import the MP4 again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This library video is missing. Remove it and import the MP4 again."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "プライバシーとセキュリティ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この動画のファイルが見つかりません。ライブラリから削除して、MP4ファイルをもう一度読み込んでください。"
           }
         }
       }
     },
-    "View Privacy Policy": {
-      "comment": "Link that opens the privacy policy in the browser.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "View Privacy Policy"
+    "Video playback failed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video playback failed."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "プライバシーポリシーを見る"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画を再生できませんでした。"
           }
         }
       }
     },
-    "Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics.": {
-      "comment": "Privacy summary shown in Settings.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics."
+    "Videos are copied locally. Your original files stay untouched." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos are copied locally. Your original files stay untouched."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画とライブラリのデータはこのMacに保存されます。Loopmuralは動画をアップロードせず、トラッキングやアクセス解析も行いません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画はこのMacにコピーされます。元のファイルは変更されません。"
+          }
+        }
+      }
+    },
+    "View Privacy Policy" : {
+      "comment" : "Link that opens the privacy policy in the browser.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Privacy Policy"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プライバシーポリシーを見る"
+          }
+        }
+      }
+    },
+    "Your desktop, brought to life" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your desktop, brought to life"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デスクトップに動きを"
+          }
+        }
+      }
+    },
+    "YOUR VIDEOS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YOUR VIDEOS"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画ライブラリ"
+          }
+        }
+      }
+    },
+    "Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics." : {
+      "comment" : "Privacy summary shown in Settings.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your videos and library data stay on your Mac. Loopmural does not upload your videos or include tracking or analytics."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画とライブラリのデータはこのMacに保存されます。Loopmuralは動画をアップロードせず、トラッキングやアクセス解析も行いません。"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
