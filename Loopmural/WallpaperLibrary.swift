@@ -26,6 +26,8 @@ final class WallpaperLibrary {
     var errorMessage: String?
     /// The video awaiting removal confirmation.
     var pendingRemoval: WallpaperVideo?
+    /// The video awaiting a new title.
+    var pendingRename: WallpaperVideo?
     /// Plays wallpaper videos across connected displays.
     let engine = WallpaperEngine()
     /// Whether to restore the last wallpaper when the app opens.
@@ -147,6 +149,21 @@ final class WallpaperLibrary {
         selectedID = nil
         defaults.removeObject(forKey: "selectedVideoID")
         defaults.removeObject(forKey: "wallpaperPaused")
+    }
+
+    /// Saves a nonempty display title without changing the video file.
+    func rename(_ video: WallpaperVideo, to title: String) {
+        let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !isBusy, !title.isEmpty, let context = container?.mainContext else { return }
+        errorMessage = nil
+        video.name = title
+        do {
+            try context.save()
+            pendingRename = nil
+        } catch {
+            context.rollback()
+            errorMessage = error.localizedDescription
+        }
     }
 
     /// Deletes a video’s metadata and app-owned file.

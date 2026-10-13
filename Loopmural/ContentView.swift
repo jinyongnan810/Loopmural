@@ -12,7 +12,7 @@ struct ContentView: View {
     /// Manages launch at login preferences.
     let login: LaunchAtLoginManager
 
-    /// Builds the library popover and removal confirmation overlay.
+    /// Builds the library popover and video editing overlays.
     var body: some View {
         VStack(spacing: 0) {
             LibraryHeader(isImporting: library.isImporting, isBusy: library.isBusy) {
@@ -34,6 +34,7 @@ struct ContentView: View {
         }
         .frame(width: 420, height: 580)
         .liquidGlassEffect(in: Rectangle())
+        .disabled(library.pendingRemoval != nil || library.pendingRename != nil)
         .overlay {
             if let video = library.pendingRemoval {
                 RemoveVideoOverlay(name: video.name) {
@@ -41,6 +42,13 @@ struct ContentView: View {
                 } onCancel: {
                     library.pendingRemoval = nil
                 }
+            } else if let video = library.pendingRename {
+                RenameVideoOverlay(name: video.name, error: library.errorMessage, isBusy: library.isBusy) { title in
+                    library.rename(video, to: title)
+                } onCancel: {
+                    library.pendingRename = nil
+                }
+                .id(video.id)
             }
         }
         .onAppear { login.refresh() }
@@ -233,7 +241,11 @@ private struct VideoLibraryView: View {
                                     await library.apply(video)
                                 }
                             },
-                            onRemove: { library.pendingRemoval = video }
+                            onRemove: { library.pendingRemoval = video },
+                            onRename: {
+                                library.errorMessage = nil
+                                library.pendingRename = video
+                            }
                         )
                     }
                 }
@@ -242,7 +254,7 @@ private struct VideoLibraryView: View {
     }
 }
 
-/// Shows a selectable video preview with a separate removal action.
+/// Shows a selectable video preview with an item menu.
 private struct VideoRow: View {
     /// The library video shown in this row.
     let video: WallpaperVideo
@@ -256,6 +268,8 @@ private struct VideoRow: View {
     let onSet: () -> Void
     /// Requests removal of this video.
     let onRemove: () -> Void
+    /// Requests a new title for this video.
+    let onRename: () -> Void
     /// Whether the pointer is over this row.
     @State private var isHovered = false
 
@@ -289,18 +303,22 @@ private struct VideoRow: View {
             .accessibilityLabel(Text("Set \(video.name) as wallpaper"))
             .accessibilityAddTraits(isSelected ? .isSelected : [])
 
-            Button(action: onRemove) {
-                Image(systemName: "trash")
+            Menu {
+                Button("Rename…", action: onRename)
+                Button("Remove from Library…", role: .destructive, action: onRemove)
+            } label: {
+                Image(systemName: "ellipsis")
                     .frame(width: 22, height: 24)
             }
-            .buttonStyle(.plain)
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
             .padding(.trailing, 8)
             .foregroundStyle(.secondary)
             .opacity(isHovered ? 1 : 0)
             .allowsHitTesting(isHovered)
             .disabled(isBusy)
-            .help("Remove from library")
-            .accessibilityLabel(Text("Remove \(video.name) from library"))
+            .help("Video actions")
+            .accessibilityLabel(Text("Actions for \(video.name)"))
         }
         .liquidGlassEffect(in: RoundedRectangle(cornerRadius: 10))
         .overlay {
@@ -311,7 +329,70 @@ private struct VideoRow: View {
         .onHover { isHovered = $0 }
         .contextMenu {
             Button("Set as Wallpaper", action: onSet).disabled(isBusy)
+            Button("Rename…", action: onRename).disabled(isBusy)
             Button("Remove from Library…", role: .destructive, action: onRemove).disabled(isBusy)
+        }
+    }
+}
+
+/// Edits a video's display title while preserving its file and identity.
+private struct RenameVideoOverlay: View {
+    /// The title being edited.
+    @State private var title: String
+    /// The selected portion of the title, initially the entire name.
+    @State private var selection: TextSelection?
+    /// Whether the title field has keyboard focus.
+    @FocusState private var isTitleFocused: Bool
+    /// Any failure encountered while saving the title.
+    let error: String?
+    /// Whether the library is performing another operation.
+    let isBusy: Bool
+    /// Saves the edited title.
+    let onSave: (String) -> Void
+    /// Dismisses the dialog without saving.
+    let onCancel: () -> Void
+
+    init(name: String, error: String?, isBusy: Bool, onSave: @escaping (String) -> Void, onCancel: @escaping () -> Void) {
+        _title = State(initialValue: name)
+        self.error = error
+        self.isBusy = isBusy
+        self.onSave = onSave
+        self.onCancel = onCancel
+    }
+
+    /// Builds the title field and keyboard-accessible dialog actions.
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.25)
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Rename Video").font(.headline)
+                TextField("Title", text: $title, selection: $selection)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($isTitleFocused)
+                if let error {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+                HStack {
+                    Spacer()
+                    Button("Cancel", action: onCancel)
+                        .keyboardShortcut(.cancelAction)
+                        .liquidGlassButtonStyle()
+                    Button("Save") { onSave(title) }
+                        .keyboardShortcut(.defaultAction)
+                        .liquidGlassButtonStyle(isProminent: true)
+                        .disabled(isBusy || title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .padding(24)
+            .liquidGlassEffect(.regular, in: RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.2), radius: 16, y: 8)
+            .padding(28)
+        }
+        .onAppear {
+            isTitleFocused = true
+            selection = TextSelection(range: title.startIndex ..< title.endIndex)
         }
     }
 }
