@@ -33,6 +33,14 @@ final class WallpaperLibrary {
         didSet { UserDefaults.standard.set(restoreOnLaunch, forKey: "restoreOnLaunch") }
     }
 
+    /// Whether wallpaper videos can play audio.
+    var allowSound: Bool {
+        didSet {
+            defaults.set(allowSound, forKey: "allowSound")
+            engine.setSoundAllowed(allowSound)
+        }
+    }
+
     /// The SwiftData store for video metadata.
     /// The folder containing app-owned video copies.
     /// The active file picker, if one is open.
@@ -53,7 +61,9 @@ final class WallpaperLibrary {
     /// Opens local storage and loads saved wallpaper preferences.
     private init() {
         restoreOnLaunch = UserDefaults.standard.object(forKey: "restoreOnLaunch") as? Bool ?? true
+        allowSound = UserDefaults.standard.bool(forKey: "allowSound")
         selectedID = UserDefaults.standard.string(forKey: "selectedVideoID").flatMap(UUID.init(uuidString:))
+        engine.setSoundAllowed(allowSound)
         do {
             let support = try FileManager.default.url(
                 for: .applicationSupportDirectory,

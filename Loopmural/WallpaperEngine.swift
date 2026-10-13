@@ -25,6 +25,8 @@ final class WallpaperEngine {
     @ObservationIgnored private var observers: [(NotificationCenter, NSObjectProtocol)] = []
     @ObservationIgnored private var suspensionReasons: Set<String> = []
     @ObservationIgnored private var generation = UUID()
+    /// Whether one display player may output wallpaper audio.
+    @ObservationIgnored private var allowSound = false
 
     /// Observes display changes, sleep, and session activity.
     init() {
@@ -65,6 +67,12 @@ final class WallpaperEngine {
     func setPaused(_ paused: Bool) {
         guard hasWallpaper else { return }
         isPaused = paused
+        updatePlayback()
+    }
+
+    /// Applies the audio preference to current and future display sessions.
+    func setSoundAllowed(_ allowed: Bool) {
+        allowSound = allowed
         updatePlayback()
     }
 
@@ -133,7 +141,9 @@ final class WallpaperEngine {
 
     /// Plays or pauses each session based on the current state.
     private func updatePlayback() {
-        for session in sessions {
+        for (index, session) in sessions.enumerated() {
+            // Output audio once even when the wallpaper spans multiple displays.
+            session.player.isMuted = !allowSound || index != 0
             if isPaused || isSuspended {
                 session.player.pause()
             } else {
@@ -161,7 +171,7 @@ final class WallpaperEngine {
 /// Owns wallpaper playback for one display.
 @MainActor
 private final class WallpaperSession {
-    /// The muted queue player for this display.
+    /// The queue player for this display, initially muted.
     let player = AVQueuePlayer()
     /// The desktop window that shows this display’s wallpaper.
     let window: DesktopWallpaperWindow

@@ -78,34 +78,19 @@
         }
       }
     },
-    "Always muted" : {
+    "Allow Sound" : {
+      "comment" : "Setting that enables audio from the wallpaper video.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Always muted"
+            "value" : "Allow Sound"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "常に消音"
-          }
-        }
-      }
-    },
-    "Audio" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Audio"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音声"
+            "value" : "音声を許可"
           }
         }
       }

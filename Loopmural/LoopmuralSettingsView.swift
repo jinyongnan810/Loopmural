@@ -36,9 +36,7 @@ struct LoopmuralSettingsView: View {
             }
 
             Section("Playback & Storage") {
-                LabeledContent("Audio") {
-                    Text("Always muted")
-                }
+                Toggle("Allow Sound", isOn: $library.allowSound)
                 LabeledContent("Displays") {
                     Text("All connected displays")
                 }
