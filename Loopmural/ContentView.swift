@@ -227,7 +227,12 @@ private struct VideoLibraryView: View {
                             image: library.thumbnails[video.id],
                             isSelected: library.selectedID == video.id,
                             isBusy: library.isBusy,
-                            onSet: { Task { await library.apply(video) } },
+                            onSet: {
+                                Task {
+                                    guard library.selectedID != video.id else { return }
+                                    await library.apply(video)
+                                }
+                            },
                             onRemove: { library.pendingRemoval = video }
                         )
                     }
@@ -237,7 +242,7 @@ private struct VideoLibraryView: View {
     }
 }
 
-/// Shows a video preview with playback and removal actions.
+/// Shows a selectable video preview with a separate removal action.
 private struct VideoRow: View {
     /// The library video shown in this row.
     let video: WallpaperVideo
@@ -256,37 +261,40 @@ private struct VideoRow: View {
 
     /// Builds the video row and its hover and context menu actions.
     var body: some View {
-        HStack(spacing: 10) {
-            VideoThumbnail(image: image)
-                .frame(width: 72, height: 45)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
-            VStack(alignment: .leading, spacing: 4) {
-                Text(video.name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(1)
-                    .help(video.name)
-                Text(Duration.seconds(video.duration), format: .time(pattern: .minuteSecond))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
-            }
-            Spacer(minLength: 4)
+        HStack(spacing: 0) {
             Button(action: onSet) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "play.circle")
-                    .font(.title3)
-                    .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
+                HStack(spacing: 10) {
+                    VideoThumbnail(image: image)
+                        .frame(width: 72, height: 45)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(video.name)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .lineLimit(1)
+                            .help(video.name)
+                        Text(Duration.seconds(video.duration), format: .time(pattern: .minuteSecond))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                    Spacer(minLength: 4)
+                }
+                .padding(8)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .disabled(isBusy)
             .help("Set as wallpaper")
             .accessibilityLabel(Text("Set \(video.name) as wallpaper"))
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
 
             Button(action: onRemove) {
                 Image(systemName: "trash")
                     .frame(width: 22, height: 24)
             }
             .buttonStyle(.plain)
+            .padding(.trailing, 8)
             .foregroundStyle(.secondary)
             .opacity(isHovered ? 1 : 0)
             .allowsHitTesting(isHovered)
@@ -294,7 +302,6 @@ private struct VideoRow: View {
             .help("Remove from library")
             .accessibilityLabel(Text("Remove \(video.name) from library"))
         }
-        .padding(8)
         .liquidGlassEffect(in: RoundedRectangle(cornerRadius: 10))
         .overlay {
             RoundedRectangle(cornerRadius: 10)
