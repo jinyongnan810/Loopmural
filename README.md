@@ -1,6 +1,6 @@
 # Loopmural - macOS Menu Bar Video Wallpaper App
 
-**Loopmural** is a lightweight, modern, and privacy-focused macOS status bar application that turns your MP4 videos into moving desktop wallpapers. Built with SwiftUI, SwiftData, AVFoundation, ServiceManagement, and Apple's Liquid Glass visual language.
+**Loopmural** is a lightweight, modern, and privacy-focused macOS status bar application that turns your MP4 or MOV videos into moving desktop wallpapers. Built with SwiftUI, SwiftData, AVFoundation, ServiceManagement, and Apple's Liquid Glass visual language.
 
 ![macOS](https://img.shields.io/badge/macOS-15.0%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.0-orange)
@@ -13,15 +13,15 @@
 
 - 🖥️ **Menu Bar Integration**: Lives in the macOS status bar with a custom template icon and zero Dock clutter (`LSUIElement = true`).
 - 🖱️ **Right-Click Context Menu**: Right-click or `Ctrl+Click` the status bar icon for **Settings** (`Cmd+,`) and **Quit Loopmural** (`Cmd+Q`). Settings opens with the app activated in the foreground.
-- 🎬 **MP4 Video Library**: Import one or more playable MP4 files, browse thumbnails and durations, and set a video as your wallpaper. Repeated imports of the same source path, size, and modification date are skipped.
-- 📁 **Persistent Local Copies**: Imported videos are copied into app storage, so moving or deleting the original MP4 does not break playback. SwiftData stores library metadata and thumbnails.
+- 🎬 **MP4 and MOV Video Library**: Import one or more playable MP4 or MOV files, browse thumbnails and durations, and set a video as your wallpaper. Repeated imports of the same source path, size, and modification date are skipped.
+- 📁 **Persistent Local Copies**: Imported videos are copied into app storage, so moving or deleting the original video does not break playback. SwiftData stores library metadata and thumbnails.
 - 🔁 **Looping Video Wallpaper**: Continuously loops each video with AVFoundation. Audio is always muted.
 - 🖥️ **Multiple Display Support**: Creates a separate player and desktop window for each connected display. Videos fill the screen with aspect-ratio-preserving cropping. Display changes rebuild the wallpaper windows.
 - ⏯️ **Playback Controls**: Pause, resume, or stop the wallpaper from the popover. Stop clears the startup selection; Quit preserves it for next time.
 - 💤 **Sleep-Aware Playback**: Pauses during display sleep, system sleep, and inactive user sessions without changing your saved pause preference.
 - 🔄 **Restore Last Wallpaper**: Optionally restore the last selected video when the app opens. Enabled by default; paused wallpapers remain paused.
 - 🎨 **Liquid Glass UI Styling**: Uses macOS 26+ Liquid Glass effects with material fallbacks on macOS 15.
-- 🗑️ **Video Removal Confirmation**: Deletes only Loopmural's imported copy and library record after confirmation. Your original MP4 remains untouched.
+- 🗑️ **Video Removal Confirmation**: Deletes only Loopmural's imported copy and library record after confirmation. Your original video remains untouched.
 - 🚀 **Launch at Login**: Optional auto-launch when you sign in, using Apple's `SMAppService`. Settings displays registration errors and required macOS approval.
 - 🔒 **Local & Private**: Video playback, library storage, and preferences stay on your Mac. No analytics, advertising, telemetry, or app-managed cloud synchronization.
 - 🌐 **Multilingual Support**: English and Japanese translations using Apple's String Catalog (`Localizable.xcstrings`).
@@ -36,7 +36,7 @@ Loopmural stores imported video copies in its sandboxed local library:
 ~/Library/Containers/com.kinn.Loopmural/Data/Library/Application Support/Loopmural/Videos
 ```
 
-In Finder, press **Cmd + Shift + G**, paste the path above, and press **Return**. Copies use UUID filenames ending in `.mp4`. Your original videos remain untouched; removing a video from Loopmural deletes only its imported copy and library record.
+In Finder, press **Cmd + Shift + G**, paste the path above, and press **Return**. Copies use UUID filenames ending in `.mp4` or `.mov`, preserving the imported format. Your original videos remain untouched; removing a video from Loopmural deletes only its imported copy and library record.
 
 ---
 
@@ -82,7 +82,7 @@ Loopmural/
 - **Menu Bar Engine**: `MenuBarExtra` (`.window` style) with local `NSEvent` monitoring
 - **Desktop Windows**: Borderless AppKit windows above the desktop background and below desktop icons, ignoring mouse input
 - **Video Playback**: `AVQueuePlayer`, `AVPlayerLooper`, and `AVPlayerLayer`, with one player per display
-- **Data Persistence**: SwiftData for metadata and thumbnails, app-local MP4 copies, and `UserDefaults` for selection and preferences
+- **Data Persistence**: SwiftData for metadata and thumbnails, app-local video copies, and `UserDefaults` for selection and preferences
 - **System Integration**: `SMAppService.mainApp` for login registration and `NSWorkspace` notifications for sleep and session changes
 - **Design System**: Liquid Glass effects and button styles on macOS 26+, with material and button-style fallbacks
 - **Localization**: String Catalog (`.xcstrings`) with English and Japanese translations
@@ -117,7 +117,7 @@ The release workflow publishes tags and notes; it does not build or upload an ap
 2. Open `Loopmural.xcodeproj` in Xcode.
 3. Select the **Loopmural** scheme and destination **My Mac**.
 4. Press `Cmd + R` to build and run.
-5. Click the Loopmural menu bar icon, then **+** to import MP4 files.
+5. Click the Loopmural menu bar icon, then **+** to import MP4 or MOV files.
 6. Click a video's play button to set it as wallpaper.
 7. Open **Settings** from the header or context menu to configure startup behavior.
 

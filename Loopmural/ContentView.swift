@@ -86,8 +86,8 @@ private struct LibraryHeader: View {
             }
             .buttonStyle(.plain)
             .disabled(isBusy)
-            .help("Import MP4 files")
-            .accessibilityLabel("Import MP4 files")
+            .help("Import MP4 or MOV files")
+            .accessibilityLabel("Import MP4 or MOV files")
             Button {
                 // Activate before opening, matching C2V’s settings presentation.
                 NSApp.activate(ignoringOtherApps: true)
@@ -179,7 +179,7 @@ private struct NowPlayingView: View {
                         .foregroundStyle(.secondary)
                     Text("Your desktop, brought to life")
                         .font(.headline)
-                    Text("Import an MP4, then set it as your wallpaper.")
+                    Text("Import an MP4 or MOV, then set it as your wallpaper.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -211,7 +211,7 @@ private struct VideoLibraryView: View {
                 Button {
                     library.chooseFiles()
                 } label: {
-                    Label("Import MP4 Files…", systemImage: "plus.circle")
+                    Label("Import MP4 or MOV Files…", systemImage: "plus.circle")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                 }
@@ -402,7 +402,7 @@ private struct RemoveVideoOverlay: View {
             Color.black.opacity(0.25)
             VStack(alignment: .leading, spacing: 16) {
                 Text("Remove video?").font(.headline)
-                Text("Remove “\(name)” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched.")
+                Text("Remove “\(name)” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched.")
                     .font(.subheadline)
                 HStack {
                     Spacer()

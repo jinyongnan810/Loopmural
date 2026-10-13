@@ -81,16 +81,16 @@ final class WallpaperLibrary {
         await apply(video, paused: defaults.bool(forKey: "wallpaperPaused"))
     }
 
-    /// Opens a file picker to import MP4 videos.
+    /// Opens a file picker to import MP4 or MOV videos.
     func chooseFiles() {
         guard !isBusy, importPanel == nil, container != nil else { return }
         errorMessage = nil
         let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.mpeg4Movie]
+        panel.allowedContentTypes = [.mpeg4Movie, .quickTimeMovie]
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
         panel.prompt = String(localized: "Import")
-        panel.message = String(localized: "MP4 files are copied into your local Loopmural library.")
+        panel.message = String(localized: "MP4 or MOV files are copied into your local Loopmural library.")
         importPanel = panel
         NSApp.activate(ignoringOtherApps: true)
         panel.begin { [weak self] response in
@@ -184,7 +184,7 @@ final class WallpaperLibrary {
         return directory.appendingPathComponent(video.fileName)
     }
 
-    /// Copies, validates, and saves selected MP4 files to the library.
+    /// Copies, validates, and saves selected MP4 or MOV files to the library.
     private func importFiles(_ urls: [URL]) async {
         guard !isBusy, let context = container?.mainContext, let directory else { return }
         isImporting = true
@@ -196,10 +196,12 @@ final class WallpaperLibrary {
                 if scoped { source.stopAccessingSecurityScopedResource() }
             }
             let id = UUID()
-            let destination = directory.appendingPathComponent(id.uuidString + ".mp4")
+            let fileExtension = source.pathExtension.lowercased()
+            let fileName = id.uuidString + "." + fileExtension
+            let destination = directory.appendingPathComponent(fileName)
             var committed = false
             do {
-                guard source.pathExtension.lowercased() == "mp4" else { throw WallpaperError.invalidVideo }
+                guard ["mp4", "mov"].contains(fileExtension) else { throw WallpaperError.invalidVideo }
                 let values = try source.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
                 let identity = source.standardizedFileURL.path + ":" +
                     String(values.fileSize ?? 0) + ":" +
@@ -222,6 +224,7 @@ final class WallpaperLibrary {
                 let video = WallpaperVideo(
                     id: id,
                     name: source.deletingPathExtension().lastPathComponent,
+                    fileName: fileName,
                     duration: duration.seconds,
                     sourceIdentity: identity,
                     thumbnailData: thumbnail

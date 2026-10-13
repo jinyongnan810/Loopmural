@@ -48,7 +48,7 @@ struct LoopmuralSettingsView: View {
                 Text("Playback pauses while your displays sleep or your user session is inactive.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text("Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy.")
+                Text("Imported MP4 or MOV files are copied into Loopmural’s local storage. Removing a video deletes only that copy.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

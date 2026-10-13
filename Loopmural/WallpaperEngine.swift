@@ -285,11 +285,11 @@ enum WallpaperError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidVideo:
-            String(localized: "Choose a playable MP4 with a video track and a finite duration.")
+            String(localized: "Choose a playable MP4 or MOV with a video track and a finite duration.")
         case .libraryUnavailable:
             String(localized: "The video library could not be opened. Restart Loopmural and try again.")
         case .missingFile:
-            String(localized: "This library video is missing. Remove it and import the MP4 again.")
+            String(localized: "This library video is missing. Remove it and import the video again.")
         }
     }
 }

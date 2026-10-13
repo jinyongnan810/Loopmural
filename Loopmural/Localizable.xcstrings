@@ -126,18 +126,18 @@
         }
       }
     },
-    "Choose a playable MP4 with a video track and a finite duration." : {
+    "Choose a playable MP4 or MOV with a video track and a finite duration." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a playable MP4 with a video track and a finite duration."
+            "value" : "Choose a playable MP4 or MOV with a video track and a finite duration."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "映像が含まれている、再生可能なMP4ファイルを選択してください。再生時間が確定している必要があります。"
+            "value" : "映像が含まれている、再生可能なMP4またはMOVファイルを選択してください。再生時間が確定している必要があります。"
           }
         }
       }
@@ -206,66 +206,66 @@
         }
       }
     },
-    "Import an MP4, then set it as your wallpaper." : {
+    "Import an MP4 or MOV, then set it as your wallpaper." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import an MP4, then set it as your wallpaper."
+            "value" : "Import an MP4 or MOV, then set it as your wallpaper."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4ファイルを読み込んで、壁紙に設定しましょう。"
+            "value" : "MP4またはMOVファイルを読み込んで、壁紙に設定しましょう。"
           }
         }
       }
     },
-    "Import MP4 files" : {
+    "Import MP4 or MOV files" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import MP4 files"
+            "value" : "Import MP4 or MOV files"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4ファイルを読み込む"
+            "value" : "MP4またはMOVファイルを読み込む"
           }
         }
       }
     },
-    "Import MP4 Files…" : {
+    "Import MP4 or MOV Files…" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import MP4 Files…"
+            "value" : "Import MP4 or MOV Files…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4ファイルを読み込む…"
+            "value" : "MP4またはMOVファイルを読み込む…"
           }
         }
       }
     },
-    "Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy." : {
+    "Imported MP4 or MOV files are copied into Loopmural’s local storage. Removing a video deletes only that copy." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Imported MP4 files are copied into Loopmural’s local storage. Removing a video deletes only that copy."
+            "value" : "Imported MP4 or MOV files are copied into Loopmural’s local storage. Removing a video deletes only that copy."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "読み込んだMP4ファイルはLoopmuralのローカルストレージにコピーされます。動画を削除すると、そのコピーだけが削除されます。"
+            "value" : "読み込んだMP4またはMOVファイルはLoopmuralのローカルストレージにコピーされます。動画を削除すると、そのコピーだけが削除されます。"
           }
         }
       }
@@ -318,18 +318,18 @@
         }
       }
     },
-    "MP4 files are copied into your local Loopmural library." : {
+    "MP4 or MOV files are copied into your local Loopmural library." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4 files are copied into your local Loopmural library."
+            "value" : "MP4 or MOV files are copied into your local Loopmural library."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4ファイルは、このMac上のLoopmuralライブラリにコピーされます。"
+            "value" : "MP4またはMOVファイルは、このMac上のLoopmuralライブラリにコピーされます。"
           }
         }
       }
@@ -529,19 +529,19 @@
         }
       }
     },
-    "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched." : {
+    "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched." : {
       "comment" : "The placeholder is the user-provided video filename without its extension.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original MP4 stays untouched."
+            "value" : "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「%@」をライブラリから削除しますか？Loopmuralのコピーだけが削除されます。元のMP4ファイルは削除されません。"
+            "value" : "「%@」をライブラリから削除しますか？Loopmuralのコピーだけが削除されます。元の動画ファイルは削除されません。"
           }
         }
       }
@@ -836,18 +836,18 @@
         }
       }
     },
-    "This library video is missing. Remove it and import the MP4 again." : {
+    "This library video is missing. Remove it and import the video again." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This library video is missing. Remove it and import the MP4 again."
+            "value" : "This library video is missing. Remove it and import the video again."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この動画のファイルが見つかりません。ライブラリから削除して、MP4ファイルをもう一度読み込んでください。"
+            "value" : "この動画のファイルが見つかりません。ライブラリから削除して、動画ファイルをもう一度読み込んでください。"
           }
         }
       }
