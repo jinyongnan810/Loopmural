@@ -43,6 +43,14 @@ final class WallpaperLibrary {
         }
     }
 
+    /// The saved wallpaper audio level, from silent to full volume.
+    var volume: Double {
+        didSet {
+            defaults.set(volume, forKey: "volume")
+            engine.setVolume(volume)
+        }
+    }
+
     /// The SwiftData store for video metadata.
     /// The folder containing app-owned video copies.
     /// The active file picker, if one is open.
@@ -64,7 +72,11 @@ final class WallpaperLibrary {
     private init() {
         restoreOnLaunch = UserDefaults.standard.object(forKey: "restoreOnLaunch") as? Bool ?? true
         allowSound = UserDefaults.standard.bool(forKey: "allowSound")
+        volume = UserDefaults.standard.object(forKey: "volume") == nil
+            ? 1
+            : min(max(UserDefaults.standard.double(forKey: "volume"), 0), 1)
         selectedID = UserDefaults.standard.string(forKey: "selectedVideoID").flatMap(UUID.init(uuidString:))
+        engine.setVolume(volume)
         engine.setSoundAllowed(allowSound)
         do {
             let support = try FileManager.default.url(

@@ -27,6 +27,8 @@ final class WallpaperEngine {
     @ObservationIgnored private var generation = UUID()
     /// Whether one display player may output wallpaper audio.
     @ObservationIgnored private var allowSound = false
+    /// The audio level applied to current and future display players.
+    @ObservationIgnored private var volume: Float = 1
 
     /// Observes display changes, sleep, and session activity.
     init() {
@@ -74,6 +76,14 @@ final class WallpaperEngine {
     func setSoundAllowed(_ allowed: Bool) {
         allowSound = allowed
         updatePlayback()
+    }
+
+    /// Updates audio levels without interrupting playback.
+    func setVolume(_ value: Double) {
+        volume = Float(min(max(value, 0), 1))
+        for session in sessions {
+            session.player.volume = volume
+        }
     }
 
     /// Cancels pending playback and closes all wallpaper windows.
@@ -144,6 +154,7 @@ final class WallpaperEngine {
         for (index, session) in sessions.enumerated() {
             // Output audio once even when the wallpaper spans multiple displays.
             session.player.isMuted = !allowSound || index != 0
+            session.player.volume = volume
             if isPaused || isSuspended {
                 session.player.pause()
             } else {

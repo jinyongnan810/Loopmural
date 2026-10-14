@@ -37,6 +37,12 @@ struct LoopmuralSettingsView: View {
 
             Section("Playback & Storage") {
                 Toggle("Allow Sound", isOn: $library.allowSound)
+                if library.allowSound {
+                    Slider(value: $library.volume, in: 0 ... 1) {
+                        Text("Volume")
+                    }
+                    .accessibilityValue(library.volume.formatted(.percent.precision(.fractionLength(0))))
+                }
                 LabeledContent("Displays") {
                     Text("All connected displays")
                 }
