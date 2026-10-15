@@ -19,16 +19,7 @@ struct ContentView: View {
                 library.chooseFiles()
             }
             Divider()
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    NowPlayingView(library: library)
-                    if let error = library.errorMessage {
-                        ErrorBanner(message: error) { library.errorMessage = nil }
-                    }
-                    VideoLibraryView(library: library)
-                }
-                .padding(16)
-            }
+            LibraryScrollView(library: library)
             Divider()
             LibraryFooter(count: library.videos.count)
         }
@@ -52,6 +43,76 @@ struct ContentView: View {
             }
         }
         .onAppear { login.refresh() }
+    }
+}
+
+/// Shows the library content with a floating shortcut back to the top.
+private struct LibraryScrollView: View {
+    let library: WallpaperLibrary
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isScrolledDown = false
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    NowPlayingView(library: library)
+                    if let error = library.errorMessage {
+                        ErrorBanner(message: error) { library.errorMessage = nil }
+                    }
+                    VideoLibraryView(library: library)
+                }
+                .padding(16)
+                .id("libraryTop")
+            }
+            .onScrollGeometryChange(for: Bool.self) { geometry in
+                geometry.contentOffset.y + geometry.contentInsets.top > 20
+            } action: { _, isScrolledDown in
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+                    self.isScrolledDown = isScrolledDown
+                }
+            }
+            .overlay(alignment: .bottomTrailing) {
+                if isScrolledDown {
+                    ScrollToTopButton {
+                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
+                            proxy.scrollTo("libraryTop", anchor: .top)
+                        }
+                    }
+                    .padding(14)
+                    .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+        }
+    }
+}
+
+/// Matches C2V's circular glass button and hover feedback.
+private struct ScrollToTopButton: View {
+    let action: () -> Void
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "arrow.up")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(isHovered ? Color.accentColor : .primary)
+                .frame(width: 32, height: 32)
+                .liquidGlassEffect(in: Circle())
+                .scaleEffect(isHovered && !reduceMotion ? 1.08 : 1)
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered in
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.15)) {
+                self.isHovered = isHovered
+            }
+        }
+        .help("Go to Top")
+        .accessibilityLabel("Scroll to top")
+        .accessibilityHint("Scrolls the wallpaper library back to the top")
     }
 }
 
