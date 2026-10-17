@@ -36,6 +36,11 @@ struct LoopmuralSettingsView: View {
             }
 
             Section("Playback & Storage") {
+                Toggle("Smooth Loop", isOn: $library.smoothLoop)
+                    .disabled(library.isBusy)
+                Text("Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 Toggle("Allow Sound", isOn: $library.allowSound)
                 if library.allowSound {
                     Slider(value: $library.volume, in: 0 ... 1) {

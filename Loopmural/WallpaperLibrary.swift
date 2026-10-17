@@ -39,6 +39,14 @@ final class WallpaperLibrary {
         didSet { UserDefaults.standard.set(restoreOnLaunch, forKey: "restoreOnLaunch") }
     }
 
+    /// Whether the end and beginning of a video overlap when looping.
+    var smoothLoop: Bool {
+        didSet {
+            defaults.set(smoothLoop, forKey: "smoothLoop")
+            engine.setSmoothLoop(smoothLoop)
+        }
+    }
+
     /// Whether wallpaper videos can play audio.
     var allowSound: Bool {
         didSet {
@@ -75,11 +83,13 @@ final class WallpaperLibrary {
     /// Opens local storage and loads saved wallpaper preferences.
     private init() {
         restoreOnLaunch = UserDefaults.standard.object(forKey: "restoreOnLaunch") as? Bool ?? true
+        smoothLoop = UserDefaults.standard.bool(forKey: "smoothLoop")
         allowSound = UserDefaults.standard.bool(forKey: "allowSound")
         volume = UserDefaults.standard.object(forKey: "volume") == nil
             ? 1
             : min(max(UserDefaults.standard.double(forKey: "volume"), 0), 1)
         selectedID = UserDefaults.standard.string(forKey: "selectedVideoID").flatMap(UUID.init(uuidString:))
+        engine.setSmoothLoop(smoothLoop)
         engine.setVolume(volume)
         engine.setSoundAllowed(allowSound)
         do {
