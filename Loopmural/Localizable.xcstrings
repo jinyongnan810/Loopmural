@@ -1,22 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Volume" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volume"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音量"
-          }
-        }
-      }
-    },
     "%lld videos" : {
       "comment" : "Number of imported videos in the library footer.",
       "localizations" : {
@@ -207,6 +191,9 @@
           }
         }
       }
+    },
+    "Go to Top" : {
+
     },
     "Import" : {
       "localizations" : {
@@ -730,6 +717,12 @@
         }
       }
     },
+    "Scroll to top" : {
+
+    },
+    "Scrolls the wallpaper library back to the top" : {
+
+    },
     "Set %@ as wallpaper" : {
       "comment" : "The placeholder is the user-provided video filename without its extension.",
       "localizations" : {
@@ -1002,6 +995,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "プライバシーポリシーを見る"
+          }
+        }
+      }
+    },
+    "Volume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音量"
           }
         }
       }

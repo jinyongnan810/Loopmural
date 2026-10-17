@@ -223,12 +223,13 @@ final class WallpaperLibrary {
         return directory.appendingPathComponent(video.fileName)
     }
 
-    /// Copies, validates, and saves selected MP4 or MOV files to the library.
+    /// Imports selected MP4 or MOV files and plays the last successfully imported video.
     private func importFiles(_ urls: [URL]) async {
         guard !isBusy, let context = container?.mainContext, let directory else { return }
         isImporting = true
         defer { isImporting = false }
         var failures: [String] = []
+        var lastImportedVideo: WallpaperVideo?
         for source in urls {
             let scoped = source.startAccessingSecurityScopedResource()
             defer {
@@ -272,6 +273,7 @@ final class WallpaperLibrary {
                 do {
                     try context.save()
                     committed = true
+                    lastImportedVideo = video
                 } catch {
                     context.rollback()
                     throw error
@@ -284,8 +286,11 @@ final class WallpaperLibrary {
                 failures.append(source.lastPathComponent + ": " + error.localizedDescription)
             }
         }
+        if let lastImportedVideo {
+            await apply(lastImportedVideo)
+        }
         if !failures.isEmpty {
-            errorMessage = failures.joined(separator: "\n")
+            errorMessage = (failures + [errorMessage].compactMap(\.self)).joined(separator: "\n")
         }
     }
 
