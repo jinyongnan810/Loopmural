@@ -1,141 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Video playback could not start. Try selecting the video again." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video playback could not start. Try selecting the video again."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "動画の再生を開始できませんでした。もう一度動画を選択してください。"
-          }
-        }
-      }
-    },
-    "Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly." : {
-      "comment" : "Explanation of optional video loop blending.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "動画の終わりと始まりをなめらかにつなぎます。もともと自然にループする動画ではオフにしてください。"
-          }
-        }
-      }
-    },
-    "Smooth Loop" : {
-      "comment" : "Blend video loop boundaries setting.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smooth Loop"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "スムーズなループ"
-          }
-        }
-      }
-    },
-    "Pinned" : {
-      "comment" : "Accessibility label for a pinned video indicator.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pinned"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ピン留め済み"
-          }
-        }
-      }
-    },
-    "Unpin" : {
-      "comment" : "Action to return a pinned video to the main library.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unpin"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ピン留めを解除"
-          }
-        }
-      }
-    },
-    "Pin" : {
-      "comment" : "Action to pin a video above the main library.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pin"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ピン留め"
-          }
-        }
-      }
-    },
-    "VIDEOS" : {
-      "comment" : "Main video library section heading.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VIDEOS"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "動画"
-          }
-        }
-      }
-    },
-    "PINNED" : {
-      "comment" : "Pinned videos section heading.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PINNED"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ピン留め"
-          }
-        }
-      }
-    },
     "%lld videos" : {
       "comment" : "Number of imported videos in the library footer.",
       "localizations" : {
@@ -243,6 +108,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "音声を許可"
+          }
+        }
+      }
+    },
+    "Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly." : {
+      "comment" : "Explanation of optional video loop blending.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画の終わりと始まりをなめらかにつなぎます。もともと自然にループする動画ではオフにしてください。"
           }
         }
       }
@@ -523,6 +405,24 @@
         }
       }
     },
+    "PINNED" : {
+      "comment" : "Pinned videos section heading.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PINNED"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留め"
+          }
+        }
+      }
+    },
     "Pause wallpaper" : {
       "localizations" : {
         "en" : {
@@ -551,6 +451,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一時停止中"
+          }
+        }
+      }
+    },
+    "Pin" : {
+      "comment" : "Action to pin a video above the main library.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留め"
+          }
+        }
+      }
+    },
+    "Pinned" : {
+      "comment" : "Accessibility label for a pinned video indicator.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinned"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留め済み"
           }
         }
       }
@@ -971,6 +905,23 @@
         }
       }
     },
+    "Smooth Loop" : {
+      "comment" : "Blend video loop boundaries setting.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smooth Loop"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スムーズなループ"
+          }
+        }
+      }
+    },
     "Start Loopmural automatically when you sign in to your Mac." : {
       "localizations" : {
         "en" : {
@@ -1068,6 +1019,41 @@
         }
       }
     },
+    "Unpin" : {
+      "comment" : "Action to return a pinned video to the main library.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留めを解除"
+          }
+        }
+      }
+    },
+    "VIDEOS" : {
+      "comment" : "Main video library section heading.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIDEOS"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画"
+          }
+        }
+      }
+    },
     "Video actions" : {
       "comment" : "Tooltip for the video item menu.",
       "localizations" : {
@@ -1081,6 +1067,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "動画の操作"
+          }
+        }
+      }
+    },
+    "Video playback could not start. Try selecting the video again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video playback could not start. Try selecting the video again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画の再生を開始できませんでした。もう一度動画を選択してください。"
           }
         }
       }

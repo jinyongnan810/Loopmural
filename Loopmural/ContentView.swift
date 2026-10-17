@@ -290,10 +290,13 @@ private struct VideoLibraryView: View {
                     .foregroundStyle(.secondary)
             } else {
                 if !library.pinnedVideos.isEmpty {
-                    VideoLibrarySection(title: "PINNED", videos: library.pinnedVideos, library: library)
+                    VideoLibrarySection(videos: library.pinnedVideos, library: library)
+                }
+                if !library.pinnedVideos.isEmpty, !library.unpinnedVideos.isEmpty {
+                    Divider()
                 }
                 if !library.unpinnedVideos.isEmpty {
-                    VideoLibrarySection(title: "VIDEOS", videos: library.unpinnedVideos, library: library)
+                    VideoLibrarySection(videos: library.unpinnedVideos, library: library)
                 }
             }
         }
@@ -302,37 +305,30 @@ private struct VideoLibraryView: View {
 
 /// Shows one library section in newest import order.
 private struct VideoLibrarySection: View {
-    let title: LocalizedStringKey
     let videos: [WallpaperVideo]
     let library: WallpaperLibrary
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-            LazyVStack(spacing: 8) {
-                ForEach(videos) { video in
-                    VideoRow(
-                        video: video,
-                        image: library.thumbnails[video.id],
-                        isSelected: library.selectedID == video.id,
-                        isBusy: library.isBusy,
-                        onSet: {
-                            Task {
-                                guard library.selectedID != video.id else { return }
-                                await library.apply(video)
-                            }
-                        },
-                        onTogglePinned: { library.togglePinned(video) },
-                        onRemove: { library.pendingRemoval = video },
-                        onRename: {
-                            library.errorMessage = nil
-                            library.pendingRename = video
+        LazyVStack(spacing: 8) {
+            ForEach(videos) { video in
+                VideoRow(
+                    video: video,
+                    image: library.thumbnails[video.id],
+                    isSelected: library.selectedID == video.id,
+                    isBusy: library.isBusy,
+                    onSet: {
+                        Task {
+                            guard library.selectedID != video.id else { return }
+                            await library.apply(video)
                         }
-                    )
-                }
+                    },
+                    onTogglePinned: { library.togglePinned(video) },
+                    onRemove: { library.pendingRemoval = video },
+                    onRename: {
+                        library.errorMessage = nil
+                        library.pendingRename = video
+                    }
+                )
             }
         }
     }
