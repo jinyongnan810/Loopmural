@@ -14,6 +14,10 @@ final class WallpaperLibrary {
 
     /// Imported videos ordered from newest to oldest.
     private(set) var videos: [WallpaperVideo] = []
+    /// Pinned videos ordered from newest to oldest.
+    private(set) var pinnedVideos: [WallpaperVideo] = []
+    /// Unpinned videos ordered from newest to oldest.
+    private(set) var unpinnedVideos: [WallpaperVideo] = []
     /// The identifier of the selected wallpaper video.
     private(set) var selectedID: UUID?
     /// Whether video imports are in progress.
@@ -178,6 +182,20 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Saves a video's pin state without changing its import order or playback.
+    func togglePinned(_ video: WallpaperVideo) {
+        guard !isBusy, let context = container?.mainContext else { return }
+        errorMessage = nil
+        video.isPinned.toggle()
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            errorMessage = error.localizedDescription
+        }
+        updateVideoSections()
+    }
+
     /// Deletes a video’s metadata and app-owned file.
     func remove(_ video: WallpaperVideo) {
         guard !isBusy, let context = container?.mainContext else { return }
@@ -210,11 +228,18 @@ final class WallpaperLibrary {
         videos = try context.fetch(FetchDescriptor<WallpaperVideo>(
             sortBy: [SortDescriptor(\WallpaperVideo.importedAt, order: .reverse)]
         ))
+        updateVideoSections()
         thumbnails = videos.reduce(into: [:]) { result, video in
             if let data = video.thumbnailData, let image = NSImage(data: data) {
                 result[video.id] = image
             }
         }
+    }
+
+    /// Partitions the already sorted library when videos or pin states change.
+    private func updateVideoSections() {
+        pinnedVideos = videos.filter(\.isPinned)
+        unpinnedVideos = videos.filter { !$0.isPinned }
     }
 
     /// Resolves the path to a video’s app-owned copy.

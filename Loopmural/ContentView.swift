@@ -289,26 +289,49 @@ private struct VideoLibraryView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
-                LazyVStack(spacing: 8) {
-                    ForEach(library.videos) { video in
-                        VideoRow(
-                            video: video,
-                            image: library.thumbnails[video.id],
-                            isSelected: library.selectedID == video.id,
-                            isBusy: library.isBusy,
-                            onSet: {
-                                Task {
-                                    guard library.selectedID != video.id else { return }
-                                    await library.apply(video)
-                                }
-                            },
-                            onRemove: { library.pendingRemoval = video },
-                            onRename: {
-                                library.errorMessage = nil
-                                library.pendingRename = video
+                if !library.pinnedVideos.isEmpty {
+                    VideoLibrarySection(title: "PINNED", videos: library.pinnedVideos, library: library)
+                }
+                if !library.unpinnedVideos.isEmpty {
+                    VideoLibrarySection(title: "VIDEOS", videos: library.unpinnedVideos, library: library)
+                }
+            }
+        }
+    }
+}
+
+/// Shows one library section in newest import order.
+private struct VideoLibrarySection: View {
+    let title: LocalizedStringKey
+    let videos: [WallpaperVideo]
+    let library: WallpaperLibrary
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+            LazyVStack(spacing: 8) {
+                ForEach(videos) { video in
+                    VideoRow(
+                        video: video,
+                        image: library.thumbnails[video.id],
+                        isSelected: library.selectedID == video.id,
+                        isBusy: library.isBusy,
+                        onSet: {
+                            Task {
+                                guard library.selectedID != video.id else { return }
+                                await library.apply(video)
                             }
-                        )
-                    }
+                        },
+                        onTogglePinned: { library.togglePinned(video) },
+                        onRemove: { library.pendingRemoval = video },
+                        onRename: {
+                            library.errorMessage = nil
+                            library.pendingRename = video
+                        }
+                    )
                 }
             }
         }
@@ -327,6 +350,8 @@ private struct VideoRow: View {
     let isBusy: Bool
     /// Sets this video as the wallpaper.
     let onSet: () -> Void
+    /// Toggles whether this video is pinned.
+    let onTogglePinned: () -> Void
     /// Requests removal of this video.
     let onRemove: () -> Void
     /// Requests a new title for this video.
@@ -354,6 +379,12 @@ private struct VideoRow: View {
                             .monospacedDigit()
                     }
                     Spacer(minLength: 4)
+                    if video.isPinned {
+                        Image(systemName: "pin.fill")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .accessibilityLabel("Pinned")
+                    }
                 }
                 .padding(8)
                 .contentShape(Rectangle())
@@ -365,6 +396,13 @@ private struct VideoRow: View {
             .accessibilityAddTraits(isSelected ? .isSelected : [])
 
             Menu {
+                Button(action: onTogglePinned) {
+                    Label {
+                        video.isPinned ? Text("Unpin") : Text("Pin")
+                    } icon: {
+                        Image(systemName: video.isPinned ? "pin.slash" : "pin")
+                    }
+                }
                 Button("Rename…", action: onRename)
                 Button("Remove from Library…", role: .destructive, action: onRemove)
             } label: {
@@ -390,6 +428,14 @@ private struct VideoRow: View {
         .onHover { isHovered = $0 }
         .contextMenu {
             Button("Set as Wallpaper", action: onSet).disabled(isBusy)
+            Button(action: onTogglePinned) {
+                Label {
+                    video.isPinned ? Text("Unpin") : Text("Pin")
+                } icon: {
+                    Image(systemName: video.isPinned ? "pin.slash" : "pin")
+                }
+            }
+            .disabled(isBusy)
             Button("Rename…", action: onRename).disabled(isBusy)
             Button("Remove from Library…", role: .destructive, action: onRemove).disabled(isBusy)
         }

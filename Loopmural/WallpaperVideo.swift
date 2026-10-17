@@ -12,6 +12,8 @@ final class WallpaperVideo {
     var fileName: String
     /// The date this video was added to the library.
     var importedAt: Date
+    /// Whether this video appears in the pinned section.
+    var isPinned: Bool = false
     /// The video’s playback duration in seconds.
     var duration: Double
     /// Identifies the source file to avoid duplicate imports.
