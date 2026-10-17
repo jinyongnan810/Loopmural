@@ -161,6 +161,70 @@
         }
       }
     },
+    "Delete All Imported Videos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Imported Videos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだ動画をすべて削除"
+          }
+        }
+      }
+    },
+    "Delete All Imported Videos?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Imported Videos?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだ動画をすべて削除しますか？"
+          }
+        }
+      }
+    },
+    "Delete All Imported Videos…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Imported Videos…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだ動画をすべて削除…"
+          }
+        }
+      }
+    },
+    "Deleting imported videos…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting imported videos…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだ動画を削除中…"
+          }
+        }
+      }
+    },
     "Dismiss error" : {
       "localizations" : {
         "en" : {
@@ -277,6 +341,7 @@
       }
     },
     "Imported MP4 or MOV files are copied into Loopmural’s local storage. Removing a video deletes only that copy." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -288,6 +353,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "読み込んだMP4またはMOVファイルはLoopmuralのローカルストレージにコピーされます。動画を削除すると、そのコピーだけが削除されます。"
+          }
+        }
+      }
+    },
+    "Imported MP4 or MOV files are copied into Loopmural’s local storage. This size includes video copies only." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported MP4 or MOV files are copied into Loopmural’s local storage. This size includes video copies only."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだMP4またはMOVファイルは、Loopmuralのローカルストレージにコピーされます。この容量は動画のコピーのみを含みます。"
+          }
+        }
+      }
+    },
+    "Imported Video Storage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported Video Storage"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだ動画の容量"
           }
         }
       }
@@ -489,7 +586,24 @@
         }
       }
     },
+    "Playback" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生"
+          }
+        }
+      }
+    },
     "Playback & Storage" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -922,6 +1036,22 @@
         }
       }
     },
+    "Some imported copies could not be deleted. Try deleting all imported videos again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some imported copies could not be deleted. Try deleting all imported videos again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部の動画のコピーを削除できませんでした。読み込んだ動画の一括削除をもう一度お試しください。"
+          }
+        }
+      }
+    },
     "Start Loopmural automatically when you sign in to your Mac." : {
       "localizations" : {
         "en" : {
@@ -970,6 +1100,22 @@
         }
       }
     },
+    "Storage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storage"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ストレージ"
+          }
+        }
+      }
+    },
     "The video library could not be opened. Restart Loopmural and try again." : {
       "localizations" : {
         "en" : {
@@ -1002,6 +1148,22 @@
         }
       }
     },
+    "This permanently deletes all imported video copies, thumbnails, and library records, and stops wallpaper playback. Your original video files won’t be affected. This cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permanently deletes all imported video copies, thumbnails, and library records, and stops wallpaper playback. Your original video files won’t be affected. This cannot be undone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込んだ動画のコピー、サムネイル、ライブラリの記録をすべて完全に削除し、壁紙の再生を停止します。元の動画ファイルには影響しません。この操作は取り消せません。"
+          }
+        }
+      }
+    },
     "Title" : {
       "comment" : "Label for the video display title field.",
       "localizations" : {
@@ -1015,6 +1177,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "タイトル"
+          }
+        }
+      }
+    },
+    "To free this space before uninstalling Loopmural, delete your library here. Your original videos won’t be affected." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To free this space before uninstalling Loopmural, delete your library here. Your original videos won’t be affected."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmuralをアンインストールする前に容量を解放するには、ここでライブラリを削除してください。元の動画には影響しません。"
+          }
+        }
+      }
+    },
+    "Unavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unavailable"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取得できません"
           }
         }
       }

@@ -35,7 +35,7 @@ struct LoopmuralSettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
-            Section("Playback & Storage") {
+            Section("Playback") {
                 Toggle("Smooth Loop", isOn: $library.smoothLoop)
                     .disabled(library.isBusy)
                 Text("Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly.")
@@ -57,10 +57,9 @@ struct LoopmuralSettingsView: View {
                 Text("Playback pauses while your displays sleep or your user session is inactive.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text("Imported MP4 or MOV files are copied into Loopmural’s local storage. Removing a video deletes only that copy.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
+
+            LibraryStorageSettingsSection(library: library)
 
             PrivacySettingsSection()
         }
@@ -69,6 +68,50 @@ struct LoopmuralSettingsView: View {
         .onAppear { login.refresh() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             login.refresh()
+        }
+    }
+}
+
+/// Shows the space used by imported videos and provides confirmed library cleanup.
+private struct LibraryStorageSettingsSection: View {
+    @Bindable var library: WallpaperLibrary
+    @State private var confirmsDeletion = false
+
+    var body: some View {
+        Section("Storage") {
+            LabeledContent("Imported Video Storage") {
+                if let bytes = library.importedVideoBytes {
+                    Text(bytes, format: .byteCount(style: .file))
+                } else {
+                    Text("Unavailable")
+                }
+            }
+            Text("Imported MP4 or MOV files are copied into Loopmural’s local storage. This size includes video copies only.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Button("Delete All Imported Videos…", role: .destructive) {
+                confirmsDeletion = true
+            }
+            .disabled(library.isBusy)
+            Text("To free this space before uninstalling Loopmural, delete your library here. Your original videos won’t be affected.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            if library.isDeleting {
+                ProgressView("Deleting imported videos…")
+                    .controlSize(.small)
+            }
+            if let message = library.errorMessage {
+                ErrorBanner(message: message) { library.errorMessage = nil }
+            }
+        }
+        .onAppear { library.refreshStorageUsage() }
+        .alert("Delete All Imported Videos?", isPresented: $confirmsDeletion) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete All Imported Videos", role: .destructive) {
+                Task { await library.deleteAllImportedVideos() }
+            }
+        } message: {
+            Text("This permanently deletes all imported video copies, thumbnails, and library records, and stops wallpaper playback. Your original video files won’t be affected. This cannot be undone.")
         }
     }
 }

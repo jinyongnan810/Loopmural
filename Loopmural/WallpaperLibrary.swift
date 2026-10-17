@@ -24,6 +24,10 @@ final class WallpaperLibrary {
     private(set) var isImporting = false
     /// Whether a wallpaper change is in progress.
     private(set) var isApplying = false
+    /// Whether all imported videos are being deleted.
+    private(set) var isDeleting = false
+    /// The total size of app-owned video files, excluding metadata and thumbnails.
+    private(set) var importedVideoBytes: Int64?
     /// Cached preview images keyed by video identifier.
     private(set) var thumbnails: [UUID: NSImage] = [:]
     /// The latest error to show to the user.
@@ -77,8 +81,8 @@ final class WallpaperLibrary {
         videos.first { $0.id == selectedID }
     }
 
-    /// Whether an import or wallpaper change is in progress.
-    var isBusy: Bool { isImporting || isApplying }
+    /// Whether an import, wallpaper change, or library deletion is in progress.
+    var isBusy: Bool { isImporting || isApplying || isDeleting }
 
     /// Opens local storage and loads saved wallpaper preferences.
     private init() {
@@ -105,6 +109,7 @@ final class WallpaperLibrary {
             container = try ModelContainer(for: WallpaperVideo.self)
             container?.mainContext.autosaveEnabled = false
             try refresh()
+            refreshStorageUsage()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -143,7 +148,7 @@ final class WallpaperLibrary {
 
     /// Starts the selected video and saves its playback preferences.
     func apply(_ video: WallpaperVideo, paused: Bool = false) async {
-        guard !isApplying else { return }
+        guard !isApplying, !isDeleting else { return }
         isApplying = true
         errorMessage = nil
         defer { isApplying = false }
@@ -209,6 +214,7 @@ final class WallpaperLibrary {
     /// Deletes a video’s metadata and app-owned file.
     func remove(_ video: WallpaperVideo) {
         guard !isBusy, let context = container?.mainContext else { return }
+        defer { refreshStorageUsage() }
         do {
             let url = try videoURL(video)
             let removedID = video.id
@@ -226,6 +232,76 @@ final class WallpaperLibrary {
             try refresh()
             if FileManager.default.fileExists(atPath: url.path) {
                 try FileManager.default.removeItem(at: url)
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    /// Measures all copies in the owned video folder, including leftovers from failed deletions.
+    func refreshStorageUsage() {
+        guard let directory else {
+            importedVideoBytes = nil
+            return
+        }
+        do {
+            let files = try FileManager.default.contentsOfDirectory(
+                at: directory,
+                includingPropertiesForKeys: [.fileSizeKey]
+            )
+            importedVideoBytes = try files.reduce(Int64(0)) { total, url in
+                let values = try url.resourceValues(forKeys: [.fileSizeKey])
+                return total + Int64(values.fileSize ?? 0)
+            }
+        } catch {
+            importedVideoBytes = nil
+        }
+    }
+
+    /// Removes library records and all app-owned copies while preserving source files.
+    func deleteAllImportedVideos() async {
+        guard !isBusy, let context = container?.mainContext, let directory else { return }
+        isDeleting = true
+        errorMessage = nil
+        defer {
+            refreshStorageUsage()
+            isDeleting = false
+        }
+        do {
+            // List files before changing metadata so an unreadable folder leaves the library intact.
+            let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            for video in videos {
+                context.delete(video)
+            }
+            do {
+                try context.save()
+            } catch {
+                context.rollback()
+                throw error
+            }
+            stopWallpaper()
+            pendingRemoval = nil
+            pendingRename = nil
+            videos.removeAll()
+            pinnedVideos.removeAll()
+            unpinnedVideos.removeAll()
+            thumbnails.removeAll()
+
+            // Keep Settings responsive and try every file even if one cannot be removed.
+            let failures = await Task.detached(priority: .userInitiated) {
+                var failures: [String] = []
+                for file in files {
+                    do {
+                        try FileManager.default.removeItem(at: file)
+                    } catch {
+                        failures.append(file.lastPathComponent + ": " + error.localizedDescription)
+                    }
+                }
+                return failures
+            }.value
+            if !failures.isEmpty {
+                errorMessage = String(localized: "Some imported copies could not be deleted. Try deleting all imported videos again.")
+                    + "\n" + failures.joined(separator: "\n")
             }
         } catch {
             errorMessage = error.localizedDescription
@@ -262,7 +338,10 @@ final class WallpaperLibrary {
     private func importFiles(_ urls: [URL]) async {
         guard !isBusy, let context = container?.mainContext, let directory else { return }
         isImporting = true
-        defer { isImporting = false }
+        defer {
+            refreshStorageUsage()
+            isImporting = false
+        }
         var failures: [String] = []
         var lastImportedVideo: WallpaperVideo?
         for source in urls {
