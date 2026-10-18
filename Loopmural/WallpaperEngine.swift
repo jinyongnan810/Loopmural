@@ -273,6 +273,7 @@ private final class WallpaperSession {
     private var looper: AVPlayerLooper?
     private var observations: [NSKeyValueObservation] = []
     private var loopTask: Task<Void, Never>?
+    private var loopBoundary: (player: AVPlayer, token: Any)?
     private var failureObserver: NSObjectProtocol?
     // Smooth looping alternates roles: one player shows the ending while the other
     // starts at zero. After the blend, the old player rewinds offscreen for reuse.
@@ -372,15 +373,57 @@ private final class WallpaperSession {
         if paused {
             loopTask?.cancel()
             loopTask = nil
-        } else if players.count == 2, loopTask == nil {
-            loopTask = Task { @MainActor [weak self] in
-                while !Task.isCancelled {
-                    self?.updateLoop()
-                    do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
-                }
-            }
+            removeLoopBoundary()
+        } else {
+            scheduleLoopBlend()
         }
         updateGains(progress: blendStarted ? min(players[1 - activeIndex].currentTime().seconds / overlap, 1) : 0)
+    }
+
+    /// Sleeps between transitions; only the overlap needs frame-rate updates.
+    private func scheduleLoopBlend() {
+        guard !closed, !paused, players.count == 2, loopTask == nil, loopBoundary == nil else { return }
+        if blendStarted || player.currentTime().seconds >= duration - overlap {
+            startLoopBlend()
+            return
+        }
+        let index = activeIndex
+        let token = player.addBoundaryTimeObserver(
+            forTimes: [NSValue(time: CMTime(seconds: duration - overlap, preferredTimescale: 600))],
+            queue: .main
+        ) { [weak self] in
+            Task { @MainActor [weak self] in
+                guard let self, !closed, !paused, activeIndex == index else { return }
+                startLoopBlend()
+            }
+        }
+        loopBoundary = (player, token)
+    }
+
+    /// Also handles a restored position beyond the boundary or a paused blend.
+    private func startLoopBlend() {
+        guard !closed, !paused, loopTask == nil else { return }
+        removeLoopBoundary()
+        let index = activeIndex
+        loopTask = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                guard let self, !closed, !paused else { return }
+                updateLoop()
+                if activeIndex != index {
+                    loopTask = nil
+                    scheduleLoopBlend()
+                    return
+                }
+                do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
+            }
+        }
+    }
+
+    private func removeLoopBoundary() {
+        if let boundary = loopBoundary {
+            boundary.player.removeTimeObserver(boundary.token)
+            loopBoundary = nil
+        }
     }
 
     /// Uses playback time so pausing or sleeping also pauses a loop blend.
@@ -446,6 +489,7 @@ private final class WallpaperSession {
     func close() {
         guard !closed else { return }
         closed = true
+        removeLoopBoundary()
         loopTask?.cancel()
         loopTask = nil
         observations.removeAll()
