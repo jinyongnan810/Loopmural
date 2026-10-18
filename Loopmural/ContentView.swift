@@ -208,7 +208,7 @@ private struct NowPlayingView: View {
             .font(.caption)
 
             if let video = library.selectedVideo {
-                VideoThumbnail(image: library.thumbnails[video.id])
+                VideoThumbnail(videoID: video.id, library: library, maximumPixelSize: 720)
                     .frame(height: 136)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 HStack {
@@ -313,7 +313,7 @@ private struct VideoLibrarySection: View {
             ForEach(videos) { video in
                 VideoRow(
                     video: video,
-                    image: library.thumbnails[video.id],
+                    library: library,
                     isSelected: library.selectedID == video.id,
                     isBusy: library.isBusy,
                     onSet: {
@@ -338,8 +338,8 @@ private struct VideoLibrarySection: View {
 private struct VideoRow: View {
     /// The library video shown in this row.
     let video: WallpaperVideo
-    /// The thumbnail image, when available.
-    let image: NSImage?
+    /// Loads previews as rows become visible.
+    let library: WallpaperLibrary
     /// Whether this video is the selected wallpaper.
     let isSelected: Bool
     /// Whether an import or wallpaper change is in progress.
@@ -360,7 +360,7 @@ private struct VideoRow: View {
         HStack(spacing: 0) {
             Button(action: onSet) {
                 HStack(spacing: 10) {
-                    VideoThumbnail(image: image)
+                    VideoThumbnail(videoID: video.id, library: library, maximumPixelSize: 160)
                         .frame(width: 72, height: 45)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                     VStack(alignment: .leading, spacing: 4) {
@@ -502,8 +502,10 @@ private struct RenameVideoOverlay: View {
 
 /// Shows a video thumbnail or a placeholder.
 private struct VideoThumbnail: View {
-    /// The thumbnail image, when available.
-    let image: NSImage?
+    let videoID: UUID
+    let library: WallpaperLibrary
+    let maximumPixelSize: Int
+    @State private var image: NSImage?
 
     /// Builds the thumbnail image or film placeholder.
     var body: some View {
@@ -522,6 +524,13 @@ private struct VideoThumbnail: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .task(id: videoID.uuidString + "-" + String(maximumPixelSize)) {
+            image = nil
+            let loaded = await library.thumbnail(for: videoID, maximumPixelSize: maximumPixelSize)
+            guard !Task.isCancelled else { return }
+            image = loaded
+        }
+        .onDisappear { image = nil }
         .accessibilityHidden(true)
     }
 }

@@ -28,8 +28,6 @@ final class WallpaperLibrary {
     private(set) var isDeleting = false
     /// The total size of app-owned video files, excluding metadata and thumbnails.
     private(set) var importedVideoBytes: Int64?
-    /// Cached preview images keyed by video identifier.
-    private(set) var thumbnails: [UUID: NSImage] = [:]
     /// The latest error to show to the user.
     var errorMessage: String?
     /// The video awaiting removal confirmation.
@@ -75,6 +73,12 @@ final class WallpaperLibrary {
     @ObservationIgnored private var directory: URL?
     @ObservationIgnored private var importPanel: NSOpenPanel?
     @ObservationIgnored private let defaults = UserDefaults.standard
+    @ObservationIgnored private var thumbnailStore: Task<WallpaperThumbnailStore, Never>?
+    @ObservationIgnored private let thumbnailCache: NSCache<NSString, NSImage> = {
+        let cache = NSCache<NSString, NSImage>()
+        cache.totalCostLimit = 32 * 1024 * 1024
+        return cache
+    }()
 
     /// The library video matching the selected identifier.
     var selectedVideo: WallpaperVideo? {
@@ -107,6 +111,13 @@ final class WallpaperLibrary {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             self.directory = directory
             container = try ModelContainer(for: WallpaperVideo.self)
+            if let container {
+                // Construct the model actor off the main thread so its context uses
+                // a background executor for external thumbnail-data reads.
+                thumbnailStore = Task.detached(priority: .utility) {
+                    WallpaperThumbnailStore(modelContainer: container)
+                }
+            }
             container?.mainContext.autosaveEnabled = false
             try refresh()
             refreshStorageUsage()
@@ -230,7 +241,8 @@ final class WallpaperLibrary {
             }
             pendingRemoval = nil
             videos.removeAll { $0.id == removedID }
-            thumbnails.removeValue(forKey: removedID)
+            thumbnailCache.removeObject(forKey: thumbnailKey(removedID, maximumPixelSize: 160))
+            thumbnailCache.removeObject(forKey: thumbnailKey(removedID, maximumPixelSize: 720))
             updateVideoSections()
             if FileManager.default.fileExists(atPath: url.path) {
                 try FileManager.default.removeItem(at: url)
@@ -287,7 +299,7 @@ final class WallpaperLibrary {
             videos.removeAll()
             pinnedVideos.removeAll()
             unpinnedVideos.removeAll()
-            thumbnails.removeAll()
+            thumbnailCache.removeAllObjects()
 
             // Keep Settings responsive and try every file even if one cannot be removed.
             let failures = await Task.detached(priority: .userInitiated) {
@@ -310,18 +322,33 @@ final class WallpaperLibrary {
         }
     }
 
-    /// Reloads video metadata and cached thumbnails from storage.
+    /// Reloads metadata without reading external thumbnail blobs.
     private func refresh() throws {
         guard let context = container?.mainContext else { throw WallpaperError.libraryUnavailable }
         videos = try context.fetch(FetchDescriptor<WallpaperVideo>(
             sortBy: [SortDescriptor(\WallpaperVideo.importedAt, order: .reverse)]
         ))
         updateVideoSections()
-        thumbnails = videos.reduce(into: [:]) { result, video in
-            if let data = video.thumbnailData, let image = NSImage(data: data) {
-                result[video.id] = image
-            }
-        }
+    }
+
+    /// Loads only requested images, retaining visible previews independently of eviction.
+    func thumbnail(for id: UUID, maximumPixelSize: Int) async -> NSImage? {
+        let key = thumbnailKey(id, maximumPixelSize: maximumPixelSize)
+        if let cached = thumbnailCache.object(forKey: key) { return cached }
+        guard let thumbnailStore else { return nil }
+        let store = await thumbnailStore.value
+        guard !Task.isCancelled else { return nil }
+        guard let bitmap = await store.image(for: id, maximumPixelSize: maximumPixelSize),
+              !Task.isCancelled, videos.contains(where: { $0.id == id }) else { return nil }
+        // Another visible view may have requested this image while we awaited decoding.
+        if let cached = thumbnailCache.object(forKey: key) { return cached }
+        let image = NSImage(cgImage: bitmap, size: .zero)
+        thumbnailCache.setObject(image, forKey: key, cost: bitmap.bytesPerRow * bitmap.height)
+        return image
+    }
+
+    private func thumbnailKey(_ id: UUID, maximumPixelSize: Int) -> NSString {
+        (id.uuidString + "-" + String(maximumPixelSize)) as NSString
     }
 
     /// Partitions the already sorted library when videos or pin states change.
@@ -397,9 +424,6 @@ final class WallpaperLibrary {
                 } catch {
                     context.rollback()
                     throw error
-                }
-                if let thumbnail, let image = NSImage(data: thumbnail) {
-                    thumbnails[id] = image
                 }
             } catch {
                 if !committed {
