@@ -24,7 +24,7 @@ final class WallpaperLibrary {
     private(set) var isImporting = false
     /// Whether a wallpaper change is in progress.
     private(set) var isApplying = false
-    /// Whether all imported videos are being deleted.
+    /// Whether imported videos are being deleted.
     private(set) var isDeleting = false
     /// The total size of app-owned video files, excluding metadata and thumbnails.
     private(set) var importedVideoBytes: Int64?
@@ -74,6 +74,8 @@ final class WallpaperLibrary {
     @ObservationIgnored private var importPanel: NSOpenPanel?
     @ObservationIgnored private let defaults = UserDefaults.standard
     @ObservationIgnored private var thumbnailStore: Task<WallpaperThumbnailStore, Never>?
+    @ObservationIgnored private var storageUsageTask: Task<Int64?, Never>?
+    @ObservationIgnored private var storageUsageGeneration = UUID()
     @ObservationIgnored private let thumbnailCache: NSCache<NSString, NSImage> = {
         let cache = NSCache<NSString, NSImage>()
         cache.totalCostLimit = 32 * 1024 * 1024
@@ -223,9 +225,13 @@ final class WallpaperLibrary {
     }
 
     /// Deletes a video’s metadata and app-owned file.
-    func remove(_ video: WallpaperVideo) {
+    func remove(_ video: WallpaperVideo) async {
         guard !isBusy, let context = container?.mainContext else { return }
-        defer { refreshStorageUsage() }
+        isDeleting = true
+        defer {
+            refreshStorageUsage()
+            isDeleting = false
+        }
         do {
             let url = try videoURL(video)
             let removedID = video.id
@@ -244,9 +250,11 @@ final class WallpaperLibrary {
             thumbnailCache.removeObject(forKey: thumbnailKey(removedID, maximumPixelSize: 160))
             thumbnailCache.removeObject(forKey: thumbnailKey(removedID, maximumPixelSize: 720))
             updateVideoSections()
-            if FileManager.default.fileExists(atPath: url.path) {
-                try FileManager.default.removeItem(at: url)
-            }
+            try await Task.detached(priority: .userInitiated) {
+                if FileManager.default.fileExists(atPath: url.path) {
+                    try FileManager.default.removeItem(at: url)
+                }
+            }.value
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -254,21 +262,35 @@ final class WallpaperLibrary {
 
     /// Measures all copies in the owned video folder, including leftovers from failed deletions.
     func refreshStorageUsage() {
+        storageUsageTask?.cancel()
+        let request = UUID()
+        storageUsageGeneration = request
         guard let directory else {
+            storageUsageTask = nil
             importedVideoBytes = nil
             return
         }
-        do {
-            let files = try FileManager.default.contentsOfDirectory(
-                at: directory,
-                includingPropertiesForKeys: [.fileSizeKey]
-            )
-            importedVideoBytes = try files.reduce(Int64(0)) { total, url in
-                let values = try url.resourceValues(forKeys: [.fileSizeKey])
-                return total + Int64(values.fileSize ?? 0)
+        let task = Task.detached(priority: .utility) { () -> Int64? in
+            do {
+                let files = try FileManager.default.contentsOfDirectory(
+                    at: directory,
+                    includingPropertiesForKeys: [.fileSizeKey]
+                )
+                return try files.reduce(Int64(0)) { total, url in
+                    try Task.checkCancellation()
+                    let values = try url.resourceValues(forKeys: [.fileSizeKey])
+                    return total + Int64(values.fileSize ?? 0)
+                }
+            } catch {
+                return nil
             }
-        } catch {
-            importedVideoBytes = nil
+        }
+        storageUsageTask = task
+        Task { @MainActor [weak self] in
+            let bytes = await task.value
+            guard let self, storageUsageGeneration == request else { return }
+            importedVideoBytes = bytes
+            storageUsageTask = nil
         }
     }
 
@@ -283,7 +305,9 @@ final class WallpaperLibrary {
         }
         do {
             // List files before changing metadata so an unreadable folder leaves the library intact.
-            let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            let files = try await Task.detached(priority: .userInitiated) {
+                try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            }.value
             for video in videos {
                 context.delete(video)
             }
@@ -387,10 +411,12 @@ final class WallpaperLibrary {
             var committed = false
             do {
                 guard ["mp4", "mov"].contains(fileExtension) else { throw WallpaperError.invalidVideo }
-                let values = try source.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
-                let identity = source.standardizedFileURL.path + ":" +
-                    String(values.fileSize ?? 0) + ":" +
-                    String(values.contentModificationDate?.timeIntervalSince1970 ?? 0)
+                let identity = try await Task.detached(priority: .userInitiated) {
+                    let values = try source.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
+                    return source.standardizedFileURL.path + ":" +
+                        String(values.fileSize ?? 0) + ":" +
+                        String(values.contentModificationDate?.timeIntervalSince1970 ?? 0)
+                }.value
                 if sourceIdentities.contains(identity) { continue }
 
                 // Large file copies run off the main actor so the menu remains responsive.
@@ -405,7 +431,7 @@ final class WallpaperLibrary {
                 guard playable, !tracks.isEmpty, duration.seconds.isFinite, duration.seconds > 0 else {
                     throw WallpaperError.invalidVideo
                 }
-                let thumbnail = await makeThumbnail(asset: asset, duration: duration.seconds)
+                let thumbnail = await Self.makeThumbnail(url: destination, duration: duration.seconds)
                 let video = WallpaperVideo(
                     id: id,
                     name: source.deletingPathExtension().lastPathComponent,
@@ -427,7 +453,9 @@ final class WallpaperLibrary {
                 }
             } catch {
                 if !committed {
-                    try? FileManager.default.removeItem(at: destination)
+                    await Task.detached(priority: .utility) {
+                        try? FileManager.default.removeItem(at: destination)
+                    }.value
                 }
                 failures.append(source.lastPathComponent + ": " + error.localizedDescription)
             }
@@ -443,19 +471,21 @@ final class WallpaperLibrary {
     }
 
     /// Creates a PNG preview frame when video decoding succeeds.
-    private func makeThumbnail(asset: AVAsset, duration: Double) async -> Data? {
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        generator.maximumSize = CGSize(width: 720, height: 405)
-        do {
-            let result = try await generator.image(at: CMTime(
-                seconds: min(1, duration / 2),
-                preferredTimescale: 600
-            ))
-            return NSBitmapImageRep(cgImage: result.image).representation(using: .png, properties: [:])
-        } catch {
-            // Missing thumbnails do not prevent a valid video from being imported.
-            return nil
-        }
+    private nonisolated static func makeThumbnail(url: URL, duration: Double) async -> Data? {
+        await Task.detached(priority: .userInitiated) {
+            let generator = AVAssetImageGenerator(asset: AVURLAsset(url: url))
+            generator.appliesPreferredTrackTransform = true
+            generator.maximumSize = CGSize(width: 720, height: 405)
+            do {
+                let result = try await generator.image(at: CMTime(
+                    seconds: min(1, duration / 2),
+                    preferredTimescale: 600
+                ))
+                return NSBitmapImageRep(cgImage: result.image).representation(using: .png, properties: [:])
+            } catch {
+                // Missing thumbnails do not prevent a valid video from being imported.
+                return nil
+            }
+        }.value
     }
 }

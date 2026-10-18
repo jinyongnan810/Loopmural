@@ -29,7 +29,7 @@ struct ContentView: View {
         .overlay {
             if let video = library.pendingRemoval {
                 RemoveVideoOverlay(name: video.name) {
-                    library.remove(video)
+                    Task { await library.remove(video) }
                 } onCancel: {
                     library.pendingRemoval = nil
                 }
