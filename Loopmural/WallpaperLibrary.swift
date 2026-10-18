@@ -229,7 +229,9 @@ final class WallpaperLibrary {
                 stopWallpaper()
             }
             pendingRemoval = nil
-            try refresh()
+            videos.removeAll { $0.id == removedID }
+            thumbnails.removeValue(forKey: removedID)
+            updateVideoSections()
             if FileManager.default.fileExists(atPath: url.path) {
                 try FileManager.default.removeItem(at: url)
             }
@@ -344,6 +346,8 @@ final class WallpaperLibrary {
         }
         var failures: [String] = []
         var lastImportedVideo: WallpaperVideo?
+        var importedVideos: [WallpaperVideo] = []
+        var sourceIdentities = Set(videos.map(\.sourceIdentity))
         for source in urls {
             let scoped = source.startAccessingSecurityScopedResource()
             defer {
@@ -360,7 +364,7 @@ final class WallpaperLibrary {
                 let identity = source.standardizedFileURL.path + ":" +
                     String(values.fileSize ?? 0) + ":" +
                     String(values.contentModificationDate?.timeIntervalSince1970 ?? 0)
-                if videos.contains(where: { $0.sourceIdentity == identity }) { continue }
+                if sourceIdentities.contains(identity) { continue }
 
                 // Large file copies run off the main actor so the menu remains responsive.
                 try await Task.detached(priority: .userInitiated) {
@@ -388,11 +392,15 @@ final class WallpaperLibrary {
                     try context.save()
                     committed = true
                     lastImportedVideo = video
+                    importedVideos.append(video)
+                    sourceIdentities.insert(identity)
                 } catch {
                     context.rollback()
                     throw error
                 }
-                try refresh()
+                if let thumbnail, let image = NSImage(data: thumbnail) {
+                    thumbnails[id] = image
+                }
             } catch {
                 if !committed {
                     try? FileManager.default.removeItem(at: destination)
@@ -400,6 +408,8 @@ final class WallpaperLibrary {
                 failures.append(source.lastPathComponent + ": " + error.localizedDescription)
             }
         }
+        videos.insert(contentsOf: importedVideos.reversed(), at: 0)
+        updateVideoSections()
         if let lastImportedVideo {
             await apply(lastImportedVideo)
         }
