@@ -21,6 +21,7 @@ final class WallpaperEngine {
     /// Identifies the latest playback request to ignore stale work.
     @ObservationIgnored var onFailure: ((String) -> Void)?
     @ObservationIgnored private var sessions: [WallpaperSession] = []
+    @ObservationIgnored private var preparingSessions: [WallpaperSession] = []
     @ObservationIgnored private var currentURL: URL?
     @ObservationIgnored private var rebuildTask: Task<Void, Never>?
     @ObservationIgnored private var smoothLoop = false
@@ -52,6 +53,8 @@ final class WallpaperEngine {
         try Task.checkCancellation()
         let request = UUID()
         generation = request
+        preparingSessions.forEach { $0.close() }
+        preparingSessions.removeAll()
         let asset = AVURLAsset(url: url)
         let playable = try await asset.load(.isPlayable)
         let duration = try await asset.load(.duration)
@@ -65,10 +68,16 @@ final class WallpaperEngine {
         // Prepare transparent windows while the current wallpaper continues playing.
         // The deferred cleanup owns these sessions until they become the active set.
         let prepared = makeSessions(url: url, duration: duration.seconds, request: request)
+        preparingSessions = prepared
         var installed = false
-        defer { if !installed { prepared.forEach { $0.close() } } }
+        defer {
+            if !installed { prepared.forEach { $0.close() } }
+            if generation == request { preparingSessions.removeAll() }
+        }
         if position.isNumeric, position.seconds > 0 {
             for session in prepared {
+                try Task.checkCancellation()
+                guard generation == request else { throw CancellationError() }
                 await session.player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero)
             }
         }
@@ -123,6 +132,8 @@ final class WallpaperEngine {
         rebuildTask?.cancel()
         rebuildTask = nil
         generation = UUID()
+        preparingSessions.forEach { $0.close() }
+        preparingSessions.removeAll()
         // Remove older transitions first so stopping cannot reveal a previous video.
         retiringSessions.forEach { $0.close() }
         retiringSessions.removeAll()
@@ -150,6 +161,21 @@ final class WallpaperEngine {
         let time = sessions.first?.player.currentTime() ?? .zero
         let paused = isPaused
         rebuildTask?.cancel()
+        // A disconnected display has no image to preserve during the fade. Release
+        // its decoders now, even if preparing the remaining displays later fails.
+        let displayIDs = Set(NSScreen.screens.map { $0.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber })
+        sessions.removeAll { session in
+            guard !displayIDs.contains(session.displayID) else { return false }
+            session.close()
+            return true
+        }
+        retiringSessions.removeAll { session in
+            guard !displayIDs.contains(session.displayID) else { return false }
+            session.close()
+            return true
+        }
+        preparingSessions.forEach { $0.close() }
+        preparingSessions.removeAll()
         rebuildTask = Task { @MainActor [weak self] in
             guard let self else { return }
             do {
@@ -241,6 +267,7 @@ final class WallpaperEngine {
 @MainActor
 private final class WallpaperSession {
     let window: DesktopWallpaperWindow
+    let displayID: NSNumber?
     private let players: [AVPlayer]
     private let videoView: WallpaperPlayerView
     private var looper: AVPlayerLooper?
@@ -266,6 +293,7 @@ private final class WallpaperSession {
 
     init(url: URL, duration: Double, smoothLoop: Bool, screen: NSScreen, onFailure: @escaping @MainActor (String) -> Void) {
         self.duration = duration
+        displayID = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber
         // Bound the overlap for short clips so most of each cycle remains unblended.
         overlap = min(0.5, duration / 4)
         // Ordinary loops use AVPlayerLooper. Smooth loops need two ordinary players
@@ -381,7 +409,10 @@ private final class WallpaperSession {
             players[previous].pause()
             videoView.finishBlend(active: activeIndex)
             players[previous].seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
-                Task { @MainActor [weak self] in self?.standbyReady = finished }
+                Task { @MainActor [weak self] in
+                    guard let self, !closed else { return }
+                    standbyReady = finished
+                }
             }
             updateGains(progress: 0)
         }
@@ -421,8 +452,19 @@ private final class WallpaperSession {
         if let failureObserver { NotificationCenter.default.removeObserver(failureObserver) }
         failureObserver = nil
         looper?.disableLooping()
-        players.forEach { $0.pause(); $0.replaceCurrentItem(with: nil) }
+        looper = nil
+        for player in players {
+            player.pause()
+            if let queue = player as? AVQueuePlayer {
+                queue.items().forEach { $0.cancelPendingSeeks() }
+                queue.removeAllItems()
+            } else {
+                player.currentItem?.cancelPendingSeeks()
+                player.replaceCurrentItem(with: nil)
+            }
+        }
         videoView.detachPlayer()
+        window.contentView = nil
         window.close()
     }
 }
