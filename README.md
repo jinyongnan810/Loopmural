@@ -77,6 +77,8 @@ Loopmural/
 
 ## 🛠️ Tech Stack & Architecture
 
+See [tech.md](tech.md) for how the moving desktop works, including flowcharts for wallpaper transitions and smooth video looping.
+
 - **Language**: Swift 5 language mode
 - **UI Framework**: SwiftUI (macOS 15.0+)
 - **Menu Bar Engine**: `MenuBarExtra` (`.window` style) with local `NSEvent` monitoring
