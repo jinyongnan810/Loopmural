@@ -51,6 +51,8 @@ final class WallpaperEngine {
     /// Validates the video and starts wallpaper playback on all displays.
     func start(url: URL, paused: Bool = false, position: CMTime = .zero) async throws {
         try Task.checkCancellation()
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         let request = UUID()
         generation = request
         preparingSessions.forEach { $0.close() }
@@ -284,6 +286,7 @@ private final class WallpaperSession {
     private var paused = true
     private var volume: Float = 1
     private var closed = false
+    private var scopedURL: URL?
     private let duration: Double
     private let overlap: Double
 
@@ -294,6 +297,7 @@ private final class WallpaperSession {
 
     init(url: URL, duration: Double, smoothLoop: Bool, screen: NSScreen, onFailure: @escaping @MainActor (String) -> Void) {
         self.duration = duration
+        if url.startAccessingSecurityScopedResource() { scopedURL = url }
         displayID = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber
         // Bound the overlap for short clips so most of each cycle remains unblended.
         overlap = min(0.5, duration / 4)
@@ -510,6 +514,8 @@ private final class WallpaperSession {
         videoView.detachPlayer()
         window.contentView = nil
         window.close()
+        scopedURL?.stopAccessingSecurityScopedResource()
+        scopedURL = nil
     }
 }
 
@@ -614,7 +620,7 @@ enum WallpaperError: LocalizedError {
         case .playbackUnavailable:
             String(localized: "Video playback could not start. Try selecting the video again.")
         case .missingFile:
-            String(localized: "This library video is missing. Remove it and import the video again.")
+            String(localized: "This video is unavailable. For linked videos, reconnect its drive or choose Locate File… from the video’s menu. For a missing library copy, remove it and add it again.")
         }
     }
 }

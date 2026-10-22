@@ -63,6 +63,70 @@
         }
       }
     },
+    "Add MP4 or MOV Files…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add MP4 or MOV Files…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4またはMOVファイルを追加…"
+          }
+        }
+      }
+    },
+    "Add MP4 or MOV files" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add MP4 or MOV files"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4またはMOVファイルを追加"
+          }
+        }
+      }
+    },
+    "Add Videos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Videos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画を追加"
+          }
+        }
+      }
+    },
+    "Add an MP4 or MOV, then set it as your wallpaper." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add an MP4 or MOV, then set it as your wallpaper."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4またはMOVを追加して、壁紙に設定しましょう。"
+          }
+        }
+      }
+    },
     "All connected displays" : {
       "localizations" : {
         "en" : {
@@ -161,7 +225,88 @@
         }
       }
     },
+    "Clear Library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Library"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリを消去"
+          }
+        }
+      }
+    },
+    "Clear Library?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Library?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリを消去しますか？"
+          }
+        }
+      }
+    },
+    "Clear Library…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Library…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリを消去…"
+          }
+        }
+      }
+    },
+    "Clearing library…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clearing library…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリを消去中…"
+          }
+        }
+      }
+    },
+    "Copy Videos into Library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Videos into Library"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画をライブラリにコピー"
+          }
+        }
+      }
+    },
     "Delete All Imported Videos" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -178,6 +323,7 @@
       }
     },
     "Delete All Imported Videos?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -194,6 +340,7 @@
       }
     },
     "Delete All Imported Videos…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -210,6 +357,7 @@
       }
     },
     "Deleting imported videos…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -277,6 +425,7 @@
 
     },
     "Import" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -293,6 +442,7 @@
       }
     },
     "Import MP4 or MOV Files…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -309,6 +459,7 @@
       }
     },
     "Import MP4 or MOV files" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -325,6 +476,7 @@
       }
     },
     "Import an MP4 or MOV, then set it as your wallpaper." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -358,6 +510,7 @@
       }
     },
     "Imported MP4 or MOV files are copied into Loopmural’s local storage. This size includes video copies only." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -374,6 +527,7 @@
       }
     },
     "Imported Video Storage" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -417,6 +571,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ログイン時に起動"
+          }
+        }
+      }
+    },
+    "Library Copy" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library Copy"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリ内のコピー"
+          }
+        }
+      }
+    },
+    "Linked" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linked"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リンク"
+          }
+        }
+      }
+    },
+    "Locate File" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locate File"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを指定"
+          }
+        }
+      }
+    },
+    "Locate File…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locate File…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを指定…"
           }
         }
       }
@@ -482,6 +702,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "現在の壁紙"
+          }
+        }
+      }
+    },
+    "New videos are linked to their original files to save space. Keep those files available. Turn on to store independent copies. Existing videos are unchanged." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New videos are linked to their original files to save space. Keep those files available. Turn on to store independent copies. Existing videos are unchanged."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "容量を節約するため、新しい動画は元のファイルにリンクされます。元のファイルを利用できる状態にしてください。オンにすると独立したコピーを保存します。既存の動画には影響しません。"
           }
         }
       }
@@ -906,6 +1142,22 @@
     "Scrolls the wallpaper library back to the top" : {
 
     },
+    "Select the original video to restore access to this library entry." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the original video to restore access to this library entry."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "元の動画を選択して、このライブラリ項目へのアクセスを復元してください。"
+          }
+        }
+      }
+    },
     "Set %@ as wallpaper" : {
       "comment" : "The placeholder is the user-provided video filename without its extension.",
       "localizations" : {
@@ -1037,6 +1289,7 @@
       }
     },
     "Some imported copies could not be deleted. Try deleting all imported videos again." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1048,6 +1301,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一部の動画のコピーを削除できませんでした。読み込んだ動画の一括削除をもう一度お試しください。"
+          }
+        }
+      }
+    },
+    "Some video copies could not be deleted. Try clearing the library again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some video copies could not be deleted. Try clearing the library again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部の動画コピーを削除できませんでした。ライブラリの消去をもう一度お試しください。"
           }
         }
       }
@@ -1133,6 +1402,7 @@
       }
     },
     "This library video is missing. Remove it and import the video again." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1149,6 +1419,7 @@
       }
     },
     "This permanently deletes all imported video copies, thumbnails, and library records, and stops wallpaper playback. Your original video files won’t be affected. This cannot be undone." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1160,6 +1431,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "読み込んだ動画のコピー、サムネイル、ライブラリの記録をすべて完全に削除し、壁紙の再生を停止します。元の動画ファイルには影響しません。この操作は取り消せません。"
+          }
+        }
+      }
+    },
+    "This permanently removes all library entries, thumbnails, and video copies stored by Loopmural, and stops wallpaper playback. Linked originals and other source files won’t be deleted. This cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permanently removes all library entries, thumbnails, and video copies stored by Loopmural, and stops wallpaper playback. Linked originals and other source files won’t be deleted. This cannot be undone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのライブラリ項目、サムネイル、Loopmuralに保存された動画のコピーを完全に削除し、壁紙の再生を停止します。リンク先の元のファイルやその他のソースファイルは削除されません。この操作は取り消せません。"
+          }
+        }
+      }
+    },
+    "This size includes video copies stored by Loopmural. Linked originals, thumbnails, and metadata are excluded." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This size includes video copies stored by Loopmural. Linked originals, thumbnails, and metadata are excluded."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmuralに保存された動画のコピーの容量です。リンク先の元のファイル、サムネイル、メタデータは含まれません。"
+          }
+        }
+      }
+    },
+    "This video is unavailable. For linked videos, reconnect its drive or choose Locate File… from the video’s menu. For a missing library copy, remove it and add it again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This video is unavailable. For linked videos, reconnect its drive or choose Locate File… from the video’s menu. For a missing library copy, remove it and add it again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この動画は利用できません。リンクされた動画の場合はドライブを再接続するか、動画のメニューから「ファイルを指定…」を選択してください。ライブラリ内のコピーが見つからない場合は、項目を削除して再追加してください。"
           }
         }
       }
@@ -1248,6 +1567,22 @@
         }
       }
     },
+    "Video Copy Storage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Copy Storage"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画コピーの使用容量"
+          }
+        }
+      }
+    },
     "Video actions" : {
       "comment" : "Tooltip for the video item menu.",
       "localizations" : {
@@ -1298,6 +1633,7 @@
       }
     },
     "Videos are copied locally. Your original files stay untouched." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1309,6 +1645,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "動画はこのMacにコピーされます。元のファイルは変更されません。"
+          }
+        }
+      }
+    },
+    "Videos are linked by default. You can enable copying in Settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos are linked by default. You can enable copying in Settings."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画は初期設定ではリンクされます。設定でコピーを有効にできます。"
+          }
+        }
+      }
+    },
+    "Videos stay in their original location. Keep them available for wallpaper playback." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos stay in their original location. Keep them available for wallpaper playback."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画は元の場所に保存されたままです。壁紙を再生できるよう、利用できる状態にしてください。"
           }
         }
       }

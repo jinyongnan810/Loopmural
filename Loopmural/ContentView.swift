@@ -60,6 +60,12 @@ private struct LibraryScrollView: View {
                     NowPlayingView(library: library)
                     if let error = library.errorMessage {
                         ErrorBanner(message: error) { library.errorMessage = nil }
+                        if let id = library.unavailableVideoID,
+                           let video = library.videos.first(where: { $0.id == id })
+                        {
+                            Button("Locate File…") { library.locateFile(video) }
+                                .disabled(library.isBusy)
+                        }
                     }
                     VideoLibraryView(library: library)
                 }
@@ -155,8 +161,8 @@ private struct LibraryHeader: View {
             }
             .buttonStyle(.plain)
             .disabled(isBusy)
-            .help("Import MP4 or MOV files")
-            .accessibilityLabel("Import MP4 or MOV files")
+            .help("Add MP4 or MOV files")
+            .accessibilityLabel("Add MP4 or MOV files")
             Button {
                 // Activate before opening, matching C2V’s settings presentation.
                 NSApp.activate(ignoringOtherApps: true)
@@ -248,7 +254,7 @@ private struct NowPlayingView: View {
                         .foregroundStyle(.secondary)
                     Text("Your desktop, brought to life")
                         .font(.headline)
-                    Text("Import an MP4 or MOV, then set it as your wallpaper.")
+                    Text("Add an MP4 or MOV, then set it as your wallpaper.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -280,12 +286,12 @@ private struct VideoLibraryView: View {
                 Button {
                     library.chooseFiles()
                 } label: {
-                    Label("Import MP4 or MOV Files…", systemImage: "plus.circle")
+                    Label("Add MP4 or MOV Files…", systemImage: "plus.circle")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                 }
                 .disabled(library.isBusy)
-                Text("Videos are copied locally. Your original files stay untouched.")
+                Text("Videos are linked by default. You can enable copying in Settings.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
@@ -318,7 +324,7 @@ private struct VideoLibrarySection: View {
                     isBusy: library.isBusy,
                     onSet: {
                         Task {
-                            guard library.selectedID != video.id else { return }
+                            guard library.selectedID != video.id || !library.engine.hasWallpaper else { return }
                             await library.apply(video)
                         }
                     },
@@ -399,6 +405,9 @@ private struct VideoRow: View {
                         Image(systemName: video.isPinned ? "pin.slash" : "pin")
                     }
                 }
+                if video.isLinked {
+                    Button("Locate File…") { library.locateFile(video) }
+                }
                 Button("Rename…", action: onRename)
                 Button("Remove from Library…", role: .destructive, action: onRemove)
             } label: {
@@ -432,6 +441,9 @@ private struct VideoRow: View {
                 }
             }
             .disabled(isBusy)
+            if video.isLinked {
+                Button("Locate File…") { library.locateFile(video) }.disabled(isBusy)
+            }
             Button("Rename…", action: onRename).disabled(isBusy)
             Button("Remove from Library…", role: .destructive, action: onRemove).disabled(isBusy)
         }
@@ -524,7 +536,7 @@ private struct VideoThumbnail: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .task(id: videoID.uuidString + "-" + String(maximumPixelSize)) {
+        .task(id: videoID.uuidString + "-" + String(maximumPixelSize) + "-" + String(library.thumbnailRevision)) {
             image = nil
             let loaded = await library.thumbnail(for: videoID, maximumPixelSize: maximumPixelSize)
             guard !Task.isCancelled else { return }

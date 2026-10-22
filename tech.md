@@ -6,10 +6,10 @@ This document describes the implementation in [WallpaperEngine.swift](Loopmural/
 
 Loopmural renders video in AppKit windows behind the desktop icons. It does not change the macOS wallpaper setting. The app must remain running to keep the video visible.
 
-1. The library copies imported MP4 or MOV files into its own Application Support directory and saves metadata and thumbnails with SwiftData. Playback uses this local copy, so moving the original file does not interrupt it.
-2. Selecting a video calls `WallpaperLibrary.apply`, which resolves the local file and awaits `WallpaperEngine.start`. The selected video and pause preference are saved in `UserDefaults` after startup succeeds.
+1. The library links new MP4 or MOV files by default, persisting read-only security-scoped bookmarks alongside SwiftData metadata and thumbnails. The optional **Copy Videos into Library** setting stores independent copies in Application Support instead. Existing imported copies stay intact. Linked originals must remain available; **Locate File…** restores access when necessary. Removing an entry or clearing the library never deletes linked originals.
+2. Selecting a video calls `WallpaperLibrary.apply`, which resolves the bookmark or app-owned copy and awaits `WallpaperEngine.start`. The selected video and pause preference are saved in `UserDefaults` after startup succeeds.
 3. The engine validates the asset asynchronously: it must be playable, contain a video track, and have a finite, positive duration.
-4. The engine creates one `WallpaperSession` per `NSScreen`. Each session owns a window, its video layers, and its own player or pair of players.
+4. The engine creates one `WallpaperSession` per `NSScreen`. Each session owns a window, its video layers, and its own player or pair of players. It retains security-scoped file access through preparation, playback, and retirement, releasing it when the session closes.
 5. An `AVPlayerLayer` renders the video using `.resizeAspectFill`, filling the display while preserving aspect ratio and cropping excess content.
 
 The borderless window covers `screen.frame` and sits at `CGWindowLevelForKey(.desktopWindow) + 1`, above the desktop background and below desktop icons. It ignores mouse events, cannot become the key or main window, has no shadow, and stays visible when the app deactivates. Its collection behavior is `[.canJoinAllSpaces, .stationary, .ignoresCycle]`. macOS controls how these windows appear during Spaces, Mission Control, and Stage Manager transitions; the engine does not animate a desktop swipe itself.

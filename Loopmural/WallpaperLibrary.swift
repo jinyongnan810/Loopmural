@@ -22,6 +22,8 @@ final class WallpaperLibrary {
     private(set) var selectedID: UUID?
     /// Whether video imports are in progress.
     private(set) var isImporting = false
+    /// Invalidates visible thumbnails after a linked file is replaced.
+    private(set) var thumbnailRevision = 0
     /// Whether a wallpaper change is in progress.
     private(set) var isApplying = false
     /// Whether imported videos are being deleted.
@@ -40,6 +42,14 @@ final class WallpaperLibrary {
     var restoreOnLaunch: Bool {
         didSet { UserDefaults.standard.set(restoreOnLaunch, forKey: "restoreOnLaunch") }
     }
+
+    /// Whether newly added videos are copied instead of linked.
+    var copyVideosIntoLibrary: Bool {
+        didSet { defaults.set(copyVideosIntoLibrary, forKey: "copyVideosIntoLibrary") }
+    }
+
+    /// The linked video whose access needs to be restored.
+    private(set) var unavailableVideoID: UUID?
 
     /// Whether the end and beginning of a video overlap when looping.
     var smoothLoop: Bool {
@@ -93,6 +103,7 @@ final class WallpaperLibrary {
     /// Opens local storage and loads saved wallpaper preferences.
     private init() {
         restoreOnLaunch = UserDefaults.standard.object(forKey: "restoreOnLaunch") as? Bool ?? true
+        copyVideosIntoLibrary = UserDefaults.standard.bool(forKey: "copyVideosIntoLibrary")
         smoothLoop = UserDefaults.standard.bool(forKey: "smoothLoop")
         allowSound = UserDefaults.standard.bool(forKey: "allowSound")
         volume = UserDefaults.standard.object(forKey: "volume") == nil
@@ -145,8 +156,10 @@ final class WallpaperLibrary {
         panel.allowedContentTypes = [.mpeg4Movie, .quickTimeMovie]
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
-        panel.prompt = String(localized: "Import")
-        panel.message = String(localized: "MP4 or MOV files are copied into your local Loopmural library.")
+        panel.prompt = String(localized: "Add Videos")
+        panel.message = copyVideosIntoLibrary
+            ? String(localized: "MP4 or MOV files are copied into your local Loopmural library.")
+            : String(localized: "Videos stay in their original location. Keep them available for wallpaper playback.")
         importPanel = panel
         NSApp.activate(ignoringOtherApps: true)
         panel.begin { [weak self] response in
@@ -167,16 +180,75 @@ final class WallpaperLibrary {
         defer { isApplying = false }
         do {
             let url = try videoURL(video)
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
             guard FileManager.default.fileExists(atPath: url.path) else {
                 throw WallpaperError.missingFile
             }
             try await engine.start(url: url, paused: paused)
+            unavailableVideoID = nil
             selectedID = video.id
             defaults.set(video.id.uuidString, forKey: "selectedVideoID")
             defaults.set(paused, forKey: "wallpaperPaused")
         } catch is CancellationError {
             // A stop or shutdown superseded this request.
         } catch {
+            if video.isLinked { unavailableVideoID = video.id }
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    /// Restores access to a linked original after it moves or becomes unavailable.
+    func locateFile(_ video: WallpaperVideo) {
+        guard video.isLinked, !isBusy, importPanel == nil else { return }
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.mpeg4Movie, .quickTimeMovie]
+        panel.canChooseDirectories = false
+        panel.prompt = String(localized: "Locate File")
+        panel.message = String(localized: "Select the original video to restore access to this library entry.")
+        importPanel = panel
+        NSApp.activate(ignoringOtherApps: true)
+        panel.begin { [weak self] response in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                importPanel = nil
+                guard response == .OK, let url = panel.url,
+                      videos.contains(where: { $0.id == video.id }) else { return }
+                await relink(video, to: url)
+            }
+        }
+    }
+
+    private func relink(_ video: WallpaperVideo, to url: URL) async {
+        guard !isBusy, let context = container?.mainContext else { return }
+        isImporting = true
+        defer { isImporting = false }
+        errorMessage = nil
+        do {
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+            let asset = AVURLAsset(url: url)
+            let playable = try await asset.load(.isPlayable)
+            let duration = try await asset.load(.duration)
+            let tracks = try await asset.loadTracks(withMediaType: .video)
+            guard playable, !tracks.isEmpty, duration.seconds.isFinite, duration.seconds > 0 else {
+                throw WallpaperError.invalidVideo
+            }
+            let bookmark = try Self.bookmark(for: url)
+            let identity = try await Self.sourceIdentity(for: url)
+            let thumbnail = await Self.makeThumbnail(url: url, duration: duration.seconds)
+            video.bookmarkData = bookmark
+            video.sourceIdentity = identity
+            video.duration = duration.seconds
+            video.thumbnailData = thumbnail
+            try context.save()
+            thumbnailCache.removeObject(forKey: thumbnailKey(video.id, maximumPixelSize: 160))
+            thumbnailCache.removeObject(forKey: thumbnailKey(video.id, maximumPixelSize: 720))
+            thumbnailRevision += 1
+            unavailableVideoID = nil
+            await apply(video)
+        } catch {
+            context.rollback()
             errorMessage = error.localizedDescription
         }
     }
@@ -224,7 +296,7 @@ final class WallpaperLibrary {
         updateVideoSections()
     }
 
-    /// Deletes a video’s metadata and app-owned file.
+    /// Removes an entry and its app-owned copy, preserving linked originals.
     func remove(_ video: WallpaperVideo) async {
         guard !isBusy, let context = container?.mainContext else { return }
         isDeleting = true
@@ -233,7 +305,7 @@ final class WallpaperLibrary {
             isDeleting = false
         }
         do {
-            let url = try videoURL(video)
+            let url = video.isLinked ? nil : try videoURL(video)
             let removedID = video.id
             context.delete(video)
             do {
@@ -246,12 +318,13 @@ final class WallpaperLibrary {
                 stopWallpaper()
             }
             pendingRemoval = nil
+            if unavailableVideoID == removedID { unavailableVideoID = nil }
             videos.removeAll { $0.id == removedID }
             thumbnailCache.removeObject(forKey: thumbnailKey(removedID, maximumPixelSize: 160))
             thumbnailCache.removeObject(forKey: thumbnailKey(removedID, maximumPixelSize: 720))
             updateVideoSections()
             try await Task.detached(priority: .userInitiated) {
-                if FileManager.default.fileExists(atPath: url.path) {
+                if let url, FileManager.default.fileExists(atPath: url.path) {
                     try FileManager.default.removeItem(at: url)
                 }
             }.value
@@ -294,7 +367,7 @@ final class WallpaperLibrary {
         }
     }
 
-    /// Removes library records and all app-owned copies while preserving source files.
+    /// Removes all library entries and app-owned copies while preserving source files.
     func deleteAllImportedVideos() async {
         guard !isBusy, let context = container?.mainContext, let directory else { return }
         isDeleting = true
@@ -318,6 +391,7 @@ final class WallpaperLibrary {
                 throw error
             }
             stopWallpaper()
+            unavailableVideoID = nil
             pendingRemoval = nil
             pendingRename = nil
             videos.removeAll()
@@ -338,7 +412,7 @@ final class WallpaperLibrary {
                 return failures
             }.value
             if !failures.isEmpty {
-                errorMessage = String(localized: "Some imported copies could not be deleted. Try deleting all imported videos again.")
+                errorMessage = String(localized: "Some video copies could not be deleted. Try clearing the library again.")
                     + "\n" + failures.joined(separator: "\n")
             }
         } catch {
@@ -381,10 +455,38 @@ final class WallpaperLibrary {
         unpinnedVideos = videos.filter { !$0.isPinned }
     }
 
-    /// Resolves the path to a video’s app-owned copy.
+    /// Resolves either a persistent bookmark or an existing app-owned copy.
     private func videoURL(_ video: WallpaperVideo) throws -> URL {
+        if let bookmark = video.bookmarkData {
+            var stale = false
+            let url = try URL(resolvingBookmarkData: bookmark, options: [.withSecurityScope, .withoutUI],
+                              relativeTo: nil, bookmarkDataIsStale: &stale)
+            if stale {
+                let scoped = url.startAccessingSecurityScopedResource()
+                defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+                video.bookmarkData = try Self.bookmark(for: url)
+                do { try container?.mainContext.save() } catch {
+                    container?.mainContext.rollback()
+                    throw error
+                }
+            }
+            return url
+        }
         guard let directory else { throw WallpaperError.libraryUnavailable }
         return directory.appendingPathComponent(video.fileName)
+    }
+
+    private static func bookmark(for url: URL) throws -> Data {
+        try url.bookmarkData(options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                             includingResourceValuesForKeys: nil, relativeTo: nil)
+    }
+
+    private nonisolated static func sourceIdentity(for source: URL) async throws -> String {
+        try await Task.detached(priority: .userInitiated) {
+            let values = try source.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
+            return source.standardizedFileURL.path + ":" + String(values.fileSize ?? 0) + ":" +
+                String(values.contentModificationDate?.timeIntervalSince1970 ?? 0)
+        }.value
     }
 
     /// Imports selected MP4 or MOV files and plays the last successfully imported video.
@@ -395,6 +497,7 @@ final class WallpaperLibrary {
             refreshStorageUsage()
             isImporting = false
         }
+        let shouldCopy = copyVideosIntoLibrary
         var failures: [String] = []
         var lastImportedVideo: WallpaperVideo?
         var importedVideos: [WallpaperVideo] = []
@@ -411,34 +514,33 @@ final class WallpaperLibrary {
             var committed = false
             do {
                 guard ["mp4", "mov"].contains(fileExtension) else { throw WallpaperError.invalidVideo }
-                let identity = try await Task.detached(priority: .userInitiated) {
-                    let values = try source.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
-                    return source.standardizedFileURL.path + ":" +
-                        String(values.fileSize ?? 0) + ":" +
-                        String(values.contentModificationDate?.timeIntervalSince1970 ?? 0)
-                }.value
+                let identity = try await Self.sourceIdentity(for: source)
                 if sourceIdentities.contains(identity) { continue }
 
-                // Large file copies run off the main actor so the menu remains responsive.
-                try await Task.detached(priority: .userInitiated) {
-                    try FileManager.default.copyItem(at: source, to: destination)
-                }.value
-
-                let asset = AVURLAsset(url: destination)
+                let bookmark = shouldCopy ? nil : try Self.bookmark(for: source)
+                if shouldCopy {
+                    // Large file copies run off the main actor so the menu remains responsive.
+                    try await Task.detached(priority: .userInitiated) {
+                        try FileManager.default.copyItem(at: source, to: destination)
+                    }.value
+                }
+                let playbackURL = shouldCopy ? destination : source
+                let asset = AVURLAsset(url: playbackURL)
                 let playable = try await asset.load(.isPlayable)
                 let duration = try await asset.load(.duration)
                 let tracks = try await asset.loadTracks(withMediaType: .video)
                 guard playable, !tracks.isEmpty, duration.seconds.isFinite, duration.seconds > 0 else {
                     throw WallpaperError.invalidVideo
                 }
-                let thumbnail = await Self.makeThumbnail(url: destination, duration: duration.seconds)
+                let thumbnail = await Self.makeThumbnail(url: playbackURL, duration: duration.seconds)
                 let video = WallpaperVideo(
                     id: id,
                     name: source.deletingPathExtension().lastPathComponent,
                     fileName: fileName,
                     duration: duration.seconds,
                     sourceIdentity: identity,
-                    thumbnailData: thumbnail
+                    thumbnailData: thumbnail,
+                    bookmarkData: bookmark
                 )
                 context.insert(video)
                 do {
@@ -452,7 +554,7 @@ final class WallpaperLibrary {
                     throw error
                 }
             } catch {
-                if !committed {
+                if !committed, shouldCopy {
                     await Task.detached(priority: .utility) {
                         try? FileManager.default.removeItem(at: destination)
                     }.value

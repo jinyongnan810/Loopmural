@@ -14,14 +14,14 @@
 - 🖥️ **Menu Bar Integration**: Lives in the macOS status bar with a custom template icon and zero Dock clutter (`LSUIElement = true`).
 - 🖱️ **Right-Click Context Menu**: Right-click or `Ctrl+Click` the status bar icon for **Settings** (`Cmd+,`) and **Quit Loopmural** (`Cmd+Q`). Settings opens with the app activated in the foreground.
 - 🎬 **MP4 and MOV Video Library**: Import one or more playable MP4 or MOV files, browse thumbnails and durations, and set a video as your wallpaper. Repeated imports of the same source path, size, and modification date are skipped.
-- 📁 **Persistent Local Copies**: Imported videos are copied into app storage, so moving or deleting the original video does not break playback. SwiftData stores library metadata and thumbnails.
+- 📁 **Space-Saving Video Links**: New videos link to their originals by default using persistent read-only file access. Enable **Copy Videos into Library** in Settings for independent copies. Existing imports stay as copies. SwiftData stores library metadata and thumbnails.
 - 🔁 **Looping Video Wallpaper**: Continuously loops each video with AVFoundation. Audio is always muted.
 - 🖥️ **Multiple Display Support**: Creates a separate player and desktop window for each connected display. Videos fill the screen with aspect-ratio-preserving cropping. Display changes rebuild the wallpaper windows.
 - ⏯️ **Playback Controls**: Pause, resume, or stop the wallpaper from the popover. Stop clears the startup selection; Quit preserves it for next time.
 - 💤 **Sleep-Aware Playback**: Pauses during display sleep, system sleep, and inactive user sessions without changing your saved pause preference.
 - 🔄 **Restore Last Wallpaper**: Optionally restore the last selected video when the app opens. Enabled by default; paused wallpapers remain paused.
 - 🎨 **Liquid Glass UI Styling**: Uses macOS 26+ Liquid Glass effects with material fallbacks on macOS 15.
-- 🗑️ **Video Removal Confirmation**: Deletes only Loopmural's imported copy and library record after confirmation. Your original video remains untouched.
+- 🗑️ **Video Removal Confirmation**: Removes the library entry and any app-owned copy after confirmation. Linked originals remain untouched.
 - 🚀 **Launch at Login**: Optional auto-launch when you sign in, using Apple's `SMAppService`. Settings displays registration errors and required macOS approval.
 - 🔒 **Local & Private**: Video playback, library storage, and preferences stay on your Mac. No analytics, advertising, telemetry, or app-managed cloud synchronization.
 - 🌐 **Multilingual Support**: English and Japanese translations using Apple's String Catalog (`Localizable.xcstrings`).
@@ -30,11 +30,13 @@ Loopmural must remain running to display moving wallpaper. It uses non-interacti
 
 ### Where to Find Copied Videos
 
-Loopmural stores imported video copies in its sandboxed local library:
+With **Copy Videos into Library** enabled, Loopmural stores new video copies in its sandboxed local library:
 
 ```text
 ~/Library/Containers/com.kinn.Loopmural/Data/Library/Application Support/Loopmural/Videos
 ```
+
+Linked videos remain in their original locations and must stay accessible. If a linked file becomes unavailable, reconnect its drive or choose **Locate File…** from its menu. Settings shows the space used by owned video copies; **Clear Library…** removes all library entries and owned copies while preserving originals.
 
 In Finder, press **Cmd + Shift + G**, paste the path above, and press **Return**. Copies use UUID filenames ending in `.mp4` or `.mov`, preserving the imported format. Your original videos remain untouched; removing a video from Loopmural deletes only its imported copy and library record.
 
@@ -48,7 +50,7 @@ Loopmural/
 │   ├── LoopmuralApp.swift                     # MenuBarExtra, Settings scene, and app lifecycle
 │   ├── ContentView.swift                      # Video library, playback controls, and overlays
 │   ├── LoopmuralSettingsView.swift            # Login and wallpaper restoration settings
-│   ├── WallpaperLibrary.swift                 # Import, copies, persistence, thumbnails, and removal
+│   ├── WallpaperLibrary.swift                 # Links, copies, persistence, thumbnails, and removal
 │   ├── WallpaperVideo.swift                   # SwiftData video metadata model
 │   ├── WallpaperEngine.swift                  # Desktop windows, looping players, and sleep handling
 │   ├── LaunchAtLoginManager.swift             # ServiceManagement registration and status
@@ -84,7 +86,7 @@ See [tech.md](tech.md) for how the moving desktop works, including flowcharts fo
 - **Menu Bar Engine**: `MenuBarExtra` (`.window` style) with local `NSEvent` monitoring
 - **Desktop Windows**: Borderless AppKit windows above the desktop background and below desktop icons, ignoring mouse input
 - **Video Playback**: `AVQueuePlayer`, `AVPlayerLooper`, and `AVPlayerLayer`, with one player per display
-- **Data Persistence**: SwiftData for metadata and thumbnails, app-local video copies, and `UserDefaults` for selection and preferences
+- **Data Persistence**: SwiftData for metadata and thumbnails, security-scoped bookmarks or app-local video copies, and `UserDefaults` for selection and preferences
 - **System Integration**: `SMAppService.mainApp` for login registration and `NSWorkspace` notifications for sleep and session changes
 - **Design System**: Liquid Glass effects and button styles on macOS 26+, with material and button-style fallbacks
 - **Localization**: String Catalog (`.xcstrings`) with English and Japanese translations
@@ -147,7 +149,7 @@ Follow [AGENTS.md](AGENTS.md): use Xcode MCP for build verification and project 
 
 ## 🛡️ Privacy Policy
 
-Loopmural stores imported video copies, thumbnails, library metadata, and preferences locally on your Mac. It does not upload your videos or include tracking or analytics. See the [Privacy Policy (English)](PRIVACY_POLICY.md) or [プライバシーポリシー (日本語)](PRIVACY_POLICY_JA.md) for details.
+Loopmural stores file bookmarks, optional video copies, thumbnails, library metadata, and preferences locally on your Mac. It does not upload your videos or include tracking or analytics. See the [Privacy Policy (English)](PRIVACY_POLICY.md) or [プライバシーポリシー (日本語)](PRIVACY_POLICY_JA.md) for details.
 
 ---
 

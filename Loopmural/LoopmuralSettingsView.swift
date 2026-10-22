@@ -79,17 +79,22 @@ private struct LibraryStorageSettingsSection: View {
 
     var body: some View {
         Section("Storage") {
-            LabeledContent("Imported Video Storage") {
+            Toggle("Copy Videos into Library", isOn: $library.copyVideosIntoLibrary)
+                .disabled(library.isBusy)
+            Text("New videos are linked to their original files to save space. Keep those files available. Turn on to store independent copies. Existing videos are unchanged.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            LabeledContent("Video Copy Storage") {
                 if let bytes = library.importedVideoBytes {
                     Text(bytes, format: .byteCount(style: .file))
                 } else {
                     Text("Unavailable")
                 }
             }
-            Text("Imported MP4 or MOV files are copied into Loopmural’s local storage. This size includes video copies only.")
+            Text("This size includes video copies stored by Loopmural. Linked originals, thumbnails, and metadata are excluded.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Button("Delete All Imported Videos…", role: .destructive) {
+            Button("Clear Library…", role: .destructive) {
                 confirmsDeletion = true
             }
             .disabled(library.isBusy)
@@ -97,7 +102,7 @@ private struct LibraryStorageSettingsSection: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if library.isDeleting {
-                ProgressView("Deleting imported videos…")
+                ProgressView("Clearing library…")
                     .controlSize(.small)
             }
             if let message = library.errorMessage {
@@ -105,13 +110,13 @@ private struct LibraryStorageSettingsSection: View {
             }
         }
         .onAppear { library.refreshStorageUsage() }
-        .alert("Delete All Imported Videos?", isPresented: $confirmsDeletion) {
+        .alert("Clear Library?", isPresented: $confirmsDeletion) {
             Button("Cancel", role: .cancel) {}
-            Button("Delete All Imported Videos", role: .destructive) {
+            Button("Clear Library", role: .destructive) {
                 Task { await library.deleteAllImportedVideos() }
             }
         } message: {
-            Text("This permanently deletes all imported video copies, thumbnails, and library records, and stops wallpaper playback. Your original video files won’t be affected. This cannot be undone.")
+            Text("This permanently removes all library entries, thumbnails, and video copies stored by Loopmural, and stops wallpaper playback. Linked originals and other source files won’t be deleted. This cannot be undone.")
         }
     }
 }

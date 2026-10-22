@@ -19,8 +19,8 @@
 
 ## 2. Local Storage & Security
 
-- **Video Copies**: When you import an MP4, Loopmural reads the selected file and stores a separate copy in its local Application Support directory under `Loopmural/Videos`. The original file is not modified.
-- **Library Metadata**: SwiftData stores a video identifier, display name, imported-copy filename, import date, duration, and optional thumbnail image. To recognize duplicate imports, the App also stores a source identifier containing the original file path, file size, and modification timestamp.
+- **Linked Videos and Optional Copies**: Newly added MP4 or MOV videos link to their original files by default. Loopmural stores a security-scoped bookmark for persistent read-only access to each selected original. If you enable **Copy Videos into Library**, it instead stores a separate copy in its local Application Support directory under `Loopmural/Videos`. Existing imported copies are preserved. Originals are not modified.
+- **Library Metadata**: SwiftData stores a video identifier, display name, imported-copy filename, import date, duration, and optional thumbnail image, and a bookmark for linked originals. To recognize duplicate imports, the App also stores a source identifier containing the original file path, file size, and modification timestamp.
 - **Preferences**: The selected video identifier, pause preference, and wallpaper restoration preference are stored locally using `UserDefaults`.
 - **App Sandbox**: The App uses the macOS App Sandbox and user-selected file access. Imported copies and the database remain in app-local storage. Loopmural does not add its own encryption layer; file protection also depends on your macOS account, device security, and backup configuration.
 
@@ -29,7 +29,7 @@
 ## 3. User Control & Data Retention
 
 - **Import and Playback**: You choose which MP4s to import and play. Pause and Stop do not delete library files. Stop clears the saved wallpaper selection. Quit preserves it for the next launch.
-- **Removal**: After confirmation, the App deletes the selected video's library record and attempts to delete its imported copy. It reports errors if removal fails. Your original MP4 is never deleted by Loopmural.
+- **Removal**: After confirmation, the App deletes the selected video's library record and attempts to delete its app-owned copy, if present. Linked originals are never deleted. It reports errors if removal fails. Your original video is never deleted by Loopmural.
 - **Retention**: Library copies and records remain until you remove them or delete the app's local data. Uninstalling the app alone may leave its data on your Mac.
 - **Full Local Data Removal**: After quitting Loopmural, you can delete its sandbox container at `~/Library/Containers/com.kinn.Loopmural/` to remove app-local data and preferences. Disable Launch at Login before uninstalling if you enabled it.
 - **Backups**: Deletion in the App does not erase copies in your backups, cloud file providers, or original source locations. Normal file and database deletion does not guarantee forensic erasure of previously stored data.
