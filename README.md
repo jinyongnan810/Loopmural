@@ -95,6 +95,8 @@ See [tech.md](tech.md) for how the moving desktop works, including flowcharts fo
 
 ## 📥 Download
 
+[![Download on the Mac App Store](https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-mac-app-store.svg)](https://apps.apple.com/jp/app/loopmural/id6821934534)
+
 Build Loopmural from source using the instructions below. Version tags and release notes are available on the [GitHub Releases page](https://github.com/jinyongnan810/Loopmural/releases).
 
 The release workflow publishes tags and notes; it does not build or upload an app binary.
