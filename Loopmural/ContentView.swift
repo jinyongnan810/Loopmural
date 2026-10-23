@@ -79,7 +79,7 @@ private struct LibraryScrollView: View {
                     self.isScrolledDown = isScrolledDown
                 }
             }
-            .overlay(alignment: .bottomTrailing) {
+            .overlay(alignment: .bottom) {
                 if isScrolledDown {
                     ScrollToTopButton {
                         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
