@@ -28,6 +28,17 @@
 
 Loopmural must remain running to display moving wallpaper. It uses non-interactive windows behind desktop icons; it does not replace macOS's system wallpaper configuration or change the lock-screen wallpaper. Placement with Spaces, Mission Control, and Stage Manager can vary by macOS version.
 
+### Where to Find Wallpaper Videos
+
+You can export photo library, or download online videos to use as wallpaper. Besides those, macOS includes official background videos that you can use.
+
+Apple's official background videos are stored in different locations depending on your macOS version:
+
+- **macOS 26 and later**: `~/Library/Application Support/com.apple.wallpaper/aerials/videos/`
+- **Before macOS 26**: `/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS/`
+
+In Finder, press **Cmd + Shift + G**, paste the appropriate path, and press **Return**.
+
 ### Where to Find Copied Videos
 
 With **Copy Videos into Library** enabled, Loopmural stores new video copies in its sandboxed local library:
