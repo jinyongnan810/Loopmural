@@ -15,9 +15,12 @@ struct ContentView: View {
     /// Builds the library popover and video editing overlays.
     var body: some View {
         VStack(spacing: 0) {
-            LibraryHeader(isImporting: library.isImporting, isBusy: library.isBusy) {
-                library.chooseFiles()
-            }
+            LibraryHeader(
+                isImporting: library.isImporting,
+                isBusy: library.isBusy,
+                onChooseFiles: { library.chooseFiles() },
+                onChoosePhotos: { library.choosePhotos() }
+            )
             Divider()
             LibraryScrollView(library: library)
             Divider()
@@ -131,8 +134,10 @@ private struct LibraryHeader: View {
     let isImporting: Bool
     /// Whether an import or wallpaper change is in progress.
     let isBusy: Bool
-    /// Opens the video import flow.
-    let onImport: () -> Void
+    /// Opens the file picker to import videos from Finder.
+    let onChooseFiles: () -> Void
+    /// Opens the Photos picker to import videos from Photos.
+    let onChoosePhotos: () -> Void
 
     /// Builds the title and import and settings controls.
     var body: some View {
@@ -154,15 +159,24 @@ private struct LibraryHeader: View {
                 ProgressView().controlSize(.small)
                     .accessibilityLabel("Importing videos")
             }
-            Button(action: onImport) {
+            Menu {
+                Button(action: onChooseFiles) {
+                    Label("Choose Files…", systemImage: "folder")
+                }
+                Button(action: onChoosePhotos) {
+                    Label("Choose from Photos…", systemImage: "photo.on.rectangle")
+                }
+            } label: {
                 Image(systemName: "plus")
                     .frame(width: 28, height: 28)
-                    .liquidGlassEffect(in: Circle())
             }
-            .buttonStyle(.plain)
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .frame(width: 28, height: 28)
+            .liquidGlassEffect(in: Circle())
             .disabled(isBusy)
-            .help("Add MP4 or MOV files")
-            .accessibilityLabel("Add MP4 or MOV files")
+            .help("Add videos")
+            .accessibilityLabel("Add videos")
             Button {
                 // Activate before opening, matching C2V’s settings presentation.
                 NSApp.activate(ignoringOtherApps: true)
@@ -288,7 +302,15 @@ private struct VideoLibraryView: View {
                 } label: {
                     Label("Add MP4 or MOV Files…", systemImage: "plus.circle")
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
+                        .padding(.vertical, 12)
+                }
+                .disabled(library.isBusy)
+                Button {
+                    library.choosePhotos()
+                } label: {
+                    Label("Choose from Photos…", systemImage: "photo.on.rectangle")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
                 }
                 .disabled(library.isBusy)
                 Text("Videos are linked by default. You can enable copying in Settings.")

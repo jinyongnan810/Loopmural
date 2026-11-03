@@ -81,7 +81,7 @@ private struct LibraryStorageSettingsSection: View {
         Section("Storage") {
             Toggle("Copy Videos into Library", isOn: $library.copyVideosIntoLibrary)
                 .disabled(library.isBusy)
-            Text("New videos are linked to their original files to save space. Keep those files available. Turn on to store independent copies. Existing videos are unchanged.")
+            Text("New videos are linked to their original files to save space. Keep those files available. Turn on to store independent copies. Videos from Photos are always copied. Existing videos are unchanged.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             LabeledContent("Video Copy Storage") {

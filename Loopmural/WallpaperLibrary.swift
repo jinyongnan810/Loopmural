@@ -2,6 +2,7 @@ import AppKit
 import AVFoundation
 import Foundation
 import Observation
+import PhotosUI
 import SwiftData
 import UniformTypeIdentifiers
 
@@ -82,6 +83,8 @@ final class WallpaperLibrary {
     @ObservationIgnored private var container: ModelContainer?
     @ObservationIgnored private var directory: URL?
     @ObservationIgnored private var importPanel: NSOpenPanel?
+    @ObservationIgnored private var photosPickerWindow: NSWindow?
+    @ObservationIgnored private var photosPickerCoordinator: PhotosPickerCoordinator?
     @ObservationIgnored private let defaults = UserDefaults.standard
     @ObservationIgnored private var thumbnailStore: Task<WallpaperThumbnailStore, Never>?
     @ObservationIgnored private var storageUsageTask: Task<Int64?, Never>?
@@ -150,7 +153,7 @@ final class WallpaperLibrary {
 
     /// Opens a file picker to import MP4 or MOV videos.
     func chooseFiles() {
-        guard !isBusy, importPanel == nil, container != nil else { return }
+        guard !isBusy, importPanel == nil, photosPickerWindow == nil, container != nil else { return }
         errorMessage = nil
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.mpeg4Movie, .quickTimeMovie]
@@ -170,6 +173,57 @@ final class WallpaperLibrary {
                 await importFiles(panel.urls)
             }
         }
+    }
+
+    /// Opens the system Photos picker to import videos from the user's photo library.
+    func choosePhotos() {
+        guard !isBusy, importPanel == nil, photosPickerWindow == nil, container != nil else { return }
+        errorMessage = nil
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .videos
+        configuration.selectionLimit = 0
+        configuration.preferredAssetRepresentationMode = .current
+
+        let picker = PHPickerViewController(configuration: configuration)
+        let coordinator = PhotosPickerCoordinator(
+            onFinish: { [weak self] results in
+                guard let self else { return }
+                closePhotosPicker()
+                guard !results.isEmpty else { return }
+                Task { @MainActor [weak self] in
+                    await self?.importPhotoResults(results)
+                }
+            },
+            onCancel: { [weak self] in
+                self?.closePhotosPicker()
+            }
+        )
+        picker.delegate = coordinator
+
+        let window = NSWindow(contentViewController: picker)
+        window.title = String(localized: "Choose from Photos")
+        window.styleMask = [.titled, .closable, .resizable]
+        window.setContentSize(NSSize(width: 760, height: 520))
+        window.minSize = NSSize(width: 560, height: 400)
+        window.isReleasedWhenClosed = false
+        window.delegate = coordinator
+        window.center()
+
+        photosPickerCoordinator = coordinator
+        photosPickerWindow = window
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(nil)
+    }
+
+    private func closePhotosPicker() {
+        guard let window = photosPickerWindow else {
+            photosPickerCoordinator = nil
+            return
+        }
+        photosPickerWindow = nil
+        photosPickerCoordinator = nil
+        window.delegate = nil
+        window.close()
     }
 
     /// Starts the selected video and saves its playback preferences.
@@ -200,7 +254,7 @@ final class WallpaperLibrary {
 
     /// Restores access to a linked original after it moves or becomes unavailable.
     func locateFile(_ video: WallpaperVideo) {
-        guard video.isLinked, !isBusy, importPanel == nil else { return }
+        guard video.isLinked, !isBusy, importPanel == nil, photosPickerWindow == nil else { return }
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.mpeg4Movie, .quickTimeMovie]
         panel.canChooseDirectories = false
@@ -590,4 +644,198 @@ final class WallpaperLibrary {
             }
         }.value
     }
+
+    private enum PhotoImportResult: Sendable {
+        case duplicate
+        case imported(fileName: String, displayName: String, identity: String)
+    }
+
+    private struct UncheckedItemProvider: @unchecked Sendable {
+        let provider: NSItemProvider
+        let assetIdentifier: String?
+        let fallbackLabel: String
+    }
+
+    /// Copies a selected Photos video representation into the library directory before the temporary file expires.
+    private nonisolated static func loadPhotoVideo(
+        item: UncheckedItemProvider,
+        id: UUID,
+        directory: URL,
+        existingIdentities: Set<String>
+    ) async throws -> PhotoImportResult {
+        let provider = item.provider
+        let typeIdentifier: String
+        if provider.hasItemConformingToTypeIdentifier(UTType.mpeg4Movie.identifier) {
+            typeIdentifier = UTType.mpeg4Movie.identifier
+        } else if provider.hasItemConformingToTypeIdentifier(UTType.quickTimeMovie.identifier) {
+            typeIdentifier = UTType.quickTimeMovie.identifier
+        } else if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+            typeIdentifier = UTType.movie.identifier
+        } else {
+            throw WallpaperError.invalidVideo
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { url, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                guard let url else {
+                    continuation.resume(throwing: WallpaperError.invalidVideo)
+                    return
+                }
+                do {
+                    let rawExtension = url.pathExtension.lowercased()
+                    let fileExtension: String
+                    if ["mp4", "mov"].contains(rawExtension) {
+                        fileExtension = rawExtension
+                    } else if typeIdentifier == UTType.mpeg4Movie.identifier {
+                        fileExtension = "mp4"
+                    } else if typeIdentifier == UTType.quickTimeMovie.identifier {
+                        fileExtension = "mov"
+                    } else {
+                        throw WallpaperError.invalidVideo
+                    }
+
+                    let values = try url.resourceValues(forKeys: [.fileSizeKey])
+                    let identity = if let assetIdentifier = item.assetIdentifier, !assetIdentifier.isEmpty {
+                        "photos:" + assetIdentifier
+                    } else {
+                        "photos:" + url.lastPathComponent.lowercased() + ":" + String(values.fileSize ?? 0)
+                    }
+                    if existingIdentities.contains(identity) {
+                        continuation.resume(returning: .duplicate)
+                        return
+                    }
+
+                    let fileName = id.uuidString + "." + fileExtension
+                    let destination = directory.appendingPathComponent(fileName)
+                    try FileManager.default.copyItem(at: url, to: destination)
+
+                    let baseName = url.deletingPathExtension().lastPathComponent
+                    let displayName = baseName.isEmpty ? item.fallbackLabel : baseName
+                    continuation.resume(returning: .imported(
+                        fileName: fileName,
+                        displayName: displayName,
+                        identity: identity
+                    ))
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Imports videos selected from Photos into local library storage and plays the last imported video.
+    private func importPhotoResults(_ results: [PHPickerResult]) async {
+        guard !isBusy, let context = container?.mainContext, let directory else { return }
+        isImporting = true
+        defer {
+            refreshStorageUsage()
+            isImporting = false
+        }
+        var failures: [String] = []
+        var lastImportedVideo: WallpaperVideo?
+        var importedVideos: [WallpaperVideo] = []
+        var sourceIdentities = Set(videos.map(\.sourceIdentity))
+
+        for result in results {
+            let id = UUID()
+            let fallbackLabel = result.itemProvider.suggestedName?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let label = (fallbackLabel?.isEmpty == false) ? fallbackLabel! : String(localized: "Photos Video")
+            let item = UncheckedItemProvider(
+                provider: result.itemProvider,
+                assetIdentifier: result.assetIdentifier,
+                fallbackLabel: label
+            )
+            var copiedDestination: URL?
+            var committed = false
+            do {
+                let loaded = try await Self.loadPhotoVideo(
+                    item: item,
+                    id: id,
+                    directory: directory,
+                    existingIdentities: sourceIdentities
+                )
+                guard case let .imported(fileName, displayName, identity) = loaded else {
+                    continue
+                }
+                let destination = directory.appendingPathComponent(fileName)
+                copiedDestination = destination
+
+                let asset = AVURLAsset(url: destination)
+                let playable = try await asset.load(.isPlayable)
+                let duration = try await asset.load(.duration)
+                let tracks = try await asset.loadTracks(withMediaType: .video)
+                guard playable, !tracks.isEmpty, duration.seconds.isFinite, duration.seconds > 0 else {
+                    throw WallpaperError.invalidVideo
+                }
+                let thumbnail = await Self.makeThumbnail(url: destination, duration: duration.seconds)
+                let video = WallpaperVideo(
+                    id: id,
+                    name: displayName,
+                    fileName: fileName,
+                    duration: duration.seconds,
+                    sourceIdentity: identity,
+                    thumbnailData: thumbnail,
+                    bookmarkData: nil
+                )
+                context.insert(video)
+                do {
+                    try context.save()
+                    committed = true
+                    lastImportedVideo = video
+                    importedVideos.append(video)
+                    sourceIdentities.insert(identity)
+                } catch {
+                    context.rollback()
+                    throw error
+                }
+            } catch {
+                if !committed, let copiedDestination {
+                    await Task.detached(priority: .utility) {
+                        try? FileManager.default.removeItem(at: copiedDestination)
+                    }.value
+                }
+                failures.append(label + ": " + error.localizedDescription)
+            }
+        }
+        videos.insert(contentsOf: importedVideos.reversed(), at: 0)
+        updateVideoSections()
+        if let lastImportedVideo {
+            await apply(lastImportedVideo)
+        }
+        if !failures.isEmpty {
+            errorMessage = (failures + [errorMessage].compactMap(\.self)).joined(separator: "\n")
+        }
+    }
+}
+
+/// Bridges PHPickerViewController and window dismissal callbacks back to the library.
+@MainActor
+private final class PhotosPickerCoordinator: NSObject, PHPickerViewControllerDelegate, NSWindowDelegate {
+    private let onFinish: ([PHPickerResult]) -> Void
+    private let onCancel: () -> Void
+
+    init(onFinish: @escaping ([PHPickerResult]) -> Void, onCancel: @escaping () -> Void) {
+        self.onFinish = onFinish
+        self.onCancel = onCancel
+    }
+
+    nonisolated func picker(_: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        let box = UncheckedPickerResults(results: results)
+        Task { @MainActor [weak self] in
+            self?.onFinish(box.results)
+        }
+    }
+
+    func windowWillClose(_: Notification) {
+        onCancel()
+    }
+}
+
+private struct UncheckedPickerResults: @unchecked Sendable {
+    let results: [PHPickerResult]
 }
