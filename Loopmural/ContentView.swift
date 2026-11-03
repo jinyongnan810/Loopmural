@@ -239,6 +239,19 @@ private struct NowPlayingView: View {
                     Spacer()
                     if library.engine.hasWallpaper {
                         Button {
+                            library.allowSound.toggle()
+                        } label: {
+                            ZStack {
+                                Image(systemName: "speaker.wave.2.fill").hidden()
+                                Image(systemName: "speaker.slash.fill").hidden()
+                                Image(systemName: library.allowSound ? "speaker.wave.2.fill" : "speaker.slash.fill")
+                                    .foregroundStyle(library.allowSound ? Color.accentColor : .primary)
+                            }
+                        }
+                        .help(library.allowSound ? Text("Mute wallpaper") : Text("Unmute wallpaper"))
+                        .accessibilityLabel(library.allowSound ? Text("Mute wallpaper") : Text("Unmute wallpaper"))
+                        .disabled(library.isApplying)
+                        Button {
                             library.togglePaused()
                         } label: {
                             Image(systemName: library.engine.isPaused ? "play.fill" : "pause.fill")

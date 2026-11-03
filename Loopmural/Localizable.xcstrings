@@ -738,6 +738,22 @@
         }
       }
     },
+    "Mute wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute wallpaper"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙を消音"
+          }
+        }
+      }
+    },
     "Muted · Loops on all displays" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1609,6 +1625,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取得できません"
+          }
+        }
+      }
+    },
+    "Unmute wallpaper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute wallpaper"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "壁紙の消音を解除"
           }
         }
       }
