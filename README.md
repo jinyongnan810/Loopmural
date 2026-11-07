@@ -47,7 +47,7 @@ With **Copy Videos into Library** enabled, Loopmural stores new video copies in 
 ~/Library/Containers/com.kinn.Loopmural/Data/Library/Application Support/Loopmural/Videos
 ```
 
-Linked videos remain in their original locations and must stay accessible. If a linked file becomes unavailable, reconnect its drive or choose **Locate File…** from its menu. Settings shows the space used by owned video copies; **Clear Library…** removes all library entries and owned copies while preserving originals.
+Linked videos remain in their original locations and must stay accessible. If a linked file becomes unavailable, reconnect its drive or choose **Locate File…** from its menu. Settings shows the space used by owned video copies; when storage is used, **Delete All Copied Wallpapers…** removes all stored copies and their library entries while leaving linked wallpapers untouched. **Clear Library…** removes all library entries and owned copies while preserving originals.
 
 In Finder, press **Cmd + Shift + G**, paste the path above, and press **Return**. Copies use UUID filenames ending in `.mp4` or `.mov`, preserving the imported format. Your original videos remain untouched; removing a video from Loopmural deletes only its imported copy and library record.
 

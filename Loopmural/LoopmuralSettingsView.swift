@@ -76,6 +76,7 @@ struct LoopmuralSettingsView: View {
 private struct LibraryStorageSettingsSection: View {
     @Bindable var library: WallpaperLibrary
     @State private var confirmsDeletion = false
+    @State private var confirmsDeletingCopies = false
 
     var body: some View {
         Section("Storage") {
@@ -94,6 +95,15 @@ private struct LibraryStorageSettingsSection: View {
             Text("This size includes video copies stored by Loopmural. Linked originals, thumbnails, and metadata are excluded.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            if let bytes = library.importedVideoBytes, bytes > 0 {
+                Button("Delete All Copied Wallpapers…", role: .destructive) {
+                    confirmsDeletingCopies = true
+                }
+                .disabled(library.isBusy)
+                Text("Delete video copies stored by Loopmural to free up storage. Linked wallpapers won’t be affected.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             Button("Clear Library…", role: .destructive) {
                 confirmsDeletion = true
             }
@@ -102,7 +112,7 @@ private struct LibraryStorageSettingsSection: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if library.isDeleting {
-                ProgressView("Clearing library…")
+                ProgressView(library.isDeletingCopies ? "Deleting copied wallpapers…" : "Clearing library…")
                     .controlSize(.small)
             }
             if let message = library.errorMessage {
@@ -110,6 +120,14 @@ private struct LibraryStorageSettingsSection: View {
             }
         }
         .onAppear { library.refreshStorageUsage() }
+        .alert("Delete All Copied Wallpapers?", isPresented: $confirmsDeletingCopies) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete All Copied Wallpapers", role: .destructive) {
+                Task { await library.deleteAllCopiedWallpapers() }
+            }
+        } message: {
+            Text("This permanently deletes all video copies stored by Loopmural to free up storage. Linked wallpapers won’t be affected. This cannot be undone.")
+        }
         .alert("Clear Library?", isPresented: $confirmsDeletion) {
             Button("Cancel", role: .cancel) {}
             Button("Clear Library", role: .destructive) {

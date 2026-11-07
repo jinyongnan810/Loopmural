@@ -370,6 +370,54 @@
         }
       }
     },
+    "Delete All Copied Wallpapers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Copied Wallpapers"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーした壁紙をすべて削除"
+          }
+        }
+      }
+    },
+    "Delete All Copied Wallpapers?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Copied Wallpapers?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーした壁紙をすべて削除しますか？"
+          }
+        }
+      }
+    },
+    "Delete All Copied Wallpapers…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Copied Wallpapers…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーした壁紙をすべて削除…"
+          }
+        }
+      }
+    },
     "Delete All Imported Videos" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -417,6 +465,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "読み込んだ動画をすべて削除…"
+          }
+        }
+      }
+    },
+    "Delete video copies stored by Loopmural to free up storage. Linked wallpapers won’t be affected." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete video copies stored by Loopmural to free up storage. Linked wallpapers won’t be affected."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmuralに保存された動画コピーを削除してストレージを解放します。リンクされた壁紙には影響しません。"
+          }
+        }
+      }
+    },
+    "Deleting copied wallpapers…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting copied wallpapers…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーした壁紙を削除中…"
           }
         }
       }
@@ -1418,6 +1498,22 @@
         }
       }
     },
+    "Some video copies could not be deleted. Try deleting all copied wallpapers again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some video copies could not be deleted. Try deleting all copied wallpapers again."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部の動画コピーを削除できませんでした。もう一度コピーした壁紙をすべて削除してみてください。"
+          }
+        }
+      }
+    },
     "Start Loopmural automatically when you sign in to your Mac." : {
       "localizations" : {
         "en" : {
@@ -1528,6 +1624,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "読み込んだ動画のコピー、サムネイル、ライブラリの記録をすべて完全に削除し、壁紙の再生を停止します。元の動画ファイルには影響しません。この操作は取り消せません。"
+          }
+        }
+      }
+    },
+    "This permanently deletes all video copies stored by Loopmural to free up storage. Linked wallpapers won’t be affected. This cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permanently deletes all video copies stored by Loopmural to free up storage. Linked wallpapers won’t be affected. This cannot be undone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loopmuralに保存されたすべての動画コピーを完全に削除してストレージを解放します。リンクされた壁紙には影響しません。この操作は取り消せません。"
           }
         }
       }

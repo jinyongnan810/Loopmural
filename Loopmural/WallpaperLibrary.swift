@@ -29,6 +29,8 @@ final class WallpaperLibrary {
     private(set) var isApplying = false
     /// Whether imported videos are being deleted.
     private(set) var isDeleting = false
+    /// Whether copied wallpapers are being deleted.
+    private(set) var isDeletingCopies = false
     /// The total size of app-owned video files, excluding metadata and thumbnails.
     private(set) var importedVideoBytes: Int64?
     /// The latest error to show to the user.
@@ -425,10 +427,12 @@ final class WallpaperLibrary {
     func deleteAllImportedVideos() async {
         guard !isBusy, let context = container?.mainContext, let directory else { return }
         isDeleting = true
+        isDeletingCopies = false
         errorMessage = nil
         defer {
             refreshStorageUsage()
             isDeleting = false
+            isDeletingCopies = false
         }
         do {
             // List files before changing metadata so an unreadable folder leaves the library intact.
@@ -467,6 +471,73 @@ final class WallpaperLibrary {
             }.value
             if !failures.isEmpty {
                 errorMessage = String(localized: "Some video copies could not be deleted. Try clearing the library again.")
+                    + "\n" + failures.joined(separator: "\n")
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    /// Removes all app-owned video copies and their library entries while preserving linked wallpapers.
+    func deleteAllCopiedWallpapers() async {
+        guard !isBusy, let context = container?.mainContext, let directory else { return }
+        isDeleting = true
+        isDeletingCopies = true
+        errorMessage = nil
+        defer {
+            refreshStorageUsage()
+            isDeleting = false
+            isDeletingCopies = false
+        }
+        do {
+            // List files before changing metadata so an unreadable folder leaves the library intact.
+            let files = try await Task.detached(priority: .userInitiated) {
+                try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            }.value
+            let copiedVideos = videos.filter { !$0.isLinked }
+            let copiedIDs = Set(copiedVideos.map(\.id))
+            for video in copiedVideos {
+                context.delete(video)
+            }
+            do {
+                try context.save()
+            } catch {
+                context.rollback()
+                throw error
+            }
+            if let selectedID, copiedIDs.contains(selectedID) {
+                stopWallpaper()
+            }
+            if let pending = pendingRemoval, copiedIDs.contains(pending.id) {
+                pendingRemoval = nil
+            }
+            if let pending = pendingRename, copiedIDs.contains(pending.id) {
+                pendingRename = nil
+            }
+            if let unavailable = unavailableVideoID, copiedIDs.contains(unavailable) {
+                unavailableVideoID = nil
+            }
+            videos.removeAll { copiedIDs.contains($0.id) }
+            for id in copiedIDs {
+                thumbnailCache.removeObject(forKey: thumbnailKey(id, maximumPixelSize: 160))
+                thumbnailCache.removeObject(forKey: thumbnailKey(id, maximumPixelSize: 720))
+            }
+            updateVideoSections()
+
+            // Keep Settings responsive and try every file even if one cannot be removed.
+            let failures = await Task.detached(priority: .userInitiated) {
+                var failures: [String] = []
+                for file in files {
+                    do {
+                        try FileManager.default.removeItem(at: file)
+                    } catch {
+                        failures.append(file.lastPathComponent + ": " + error.localizedDescription)
+                    }
+                }
+                return failures
+            }.value
+            if !failures.isEmpty {
+                errorMessage = String(localized: "Some video copies could not be deleted. Try deleting all copied wallpapers again.")
                     + "\n" + failures.joined(separator: "\n")
             }
         } catch {
