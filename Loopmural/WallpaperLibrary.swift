@@ -62,6 +62,14 @@ final class WallpaperLibrary {
         }
     }
 
+    /// Whether wallpaper playback is restricted to the main display.
+    var onlyOnMainDisplay: Bool {
+        didSet {
+            defaults.set(onlyOnMainDisplay, forKey: "onlyOnMainDisplay")
+            engine.setOnlyOnMainDisplay(onlyOnMainDisplay)
+        }
+    }
+
     /// Whether wallpaper videos can play audio.
     var allowSound: Bool {
         didSet {
@@ -110,12 +118,14 @@ final class WallpaperLibrary {
         restoreOnLaunch = UserDefaults.standard.object(forKey: "restoreOnLaunch") as? Bool ?? true
         copyVideosIntoLibrary = UserDefaults.standard.bool(forKey: "copyVideosIntoLibrary")
         smoothLoop = UserDefaults.standard.bool(forKey: "smoothLoop")
+        onlyOnMainDisplay = UserDefaults.standard.bool(forKey: "onlyOnMainDisplay")
         allowSound = UserDefaults.standard.bool(forKey: "allowSound")
         volume = UserDefaults.standard.object(forKey: "volume") == nil
             ? 1
             : min(max(UserDefaults.standard.double(forKey: "volume"), 0), 1)
         selectedID = UserDefaults.standard.string(forKey: "selectedVideoID").flatMap(UUID.init(uuidString:))
         engine.setSmoothLoop(smoothLoop)
+        engine.setOnlyOnMainDisplay(onlyOnMainDisplay)
         engine.setVolume(volume)
         engine.setSoundAllowed(allowSound)
         do {

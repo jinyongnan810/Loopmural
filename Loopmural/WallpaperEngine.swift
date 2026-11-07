@@ -25,6 +25,7 @@ final class WallpaperEngine {
     @ObservationIgnored private var currentURL: URL?
     @ObservationIgnored private var rebuildTask: Task<Void, Never>?
     @ObservationIgnored private var smoothLoop = false
+    @ObservationIgnored private var onlyOnMainDisplay = false
     @ObservationIgnored private var retiringSessions: [WallpaperSession] = []
     @ObservationIgnored private var observers: [(NotificationCenter, NSObjectProtocol)] = []
     @ObservationIgnored private var suspensionReasons: Set<String> = []
@@ -190,9 +191,14 @@ final class WallpaperEngine {
         }
     }
 
+    /// The display screens to target for wallpaper playback.
+    private var targetScreens: [NSScreen] {
+        onlyOnMainDisplay ? Array(NSScreen.screens.prefix(1)) : NSScreen.screens
+    }
+
     /// Creates one independently rendered session per display, honoring Reduce Motion.
     private func makeSessions(url: URL, duration: Double, request: UUID) -> [WallpaperSession] {
-        NSScreen.screens.map { screen in
+        targetScreens.map { screen in
             WallpaperSession(url: url, duration: duration, smoothLoop: smoothLoop && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion, screen: screen) { [weak self] message in
                 guard let self, generation == request else { return }
                 stop()
@@ -208,12 +214,22 @@ final class WallpaperEngine {
         rebuildScreens()
     }
 
+    /// Configures whether wallpaper playback is restricted to the main display.
+    func setOnlyOnMainDisplay(_ enabled: Bool) {
+        guard onlyOnMainDisplay != enabled else { return }
+        onlyOnMainDisplay = enabled
+        rebuildScreens()
+    }
+
     /// Keeps the old image underneath the incoming video until its fade completes.
     private func retire(_ old: [WallpaperSession], duration: Double, fadeOut: Bool) {
         retiringSessions.append(contentsOf: old)
+        let activeDisplayIDs = Set(sessions.compactMap(\.displayID))
         for session in old {
-            session.setPlayback(paused: fadeOut || isPaused || isSuspended, muted: true, volume: volume)
-            if fadeOut { session.fadeOut(duration: duration) }
+            let matchesActive = session.displayID.map { activeDisplayIDs.contains($0) } ?? false
+            let shouldFade = fadeOut || !matchesActive
+            session.setPlayback(paused: shouldFade || isPaused || isSuspended, muted: true, volume: volume)
+            if shouldFade { session.fadeOut(duration: duration) }
         }
         // Retain outgoing windows until the visual transition finishes. close() is
         // idempotent because stop or shutdown may already have released them.

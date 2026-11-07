@@ -41,18 +41,17 @@ struct LoopmuralSettingsView: View {
                 Text("Blend the end of each video into its beginning. Leave off for videos that already loop seamlessly.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                Toggle("Only on Main Display", isOn: $library.onlyOnMainDisplay)
+                    .disabled(library.isBusy)
+                Text("Play wallpaper video only on the main display. Leave off to show on all connected displays.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 Toggle("Allow Sound", isOn: $library.allowSound)
                 if library.allowSound {
                     Slider(value: $library.volume, in: 0 ... 1) {
                         Text("Volume")
                     }
                     .accessibilityValue(library.volume.formatted(.percent.precision(.fractionLength(0))))
-                }
-                LabeledContent("Displays") {
-                    Text("All connected displays")
-                }
-                LabeledContent("Sizing") {
-                    Text("Fill screen")
                 }
                 Text("Playback pauses while your displays sleep or your user session is inactive.")
                     .font(.caption)

@@ -63,18 +63,18 @@
         }
       }
     },
-    "Add an MP4 or MOV, then set it as your wallpaper." : {
+    "Add MP4 or MOV Files…" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add an MP4 or MOV, then set it as your wallpaper."
+            "value" : "Add MP4 or MOV Files…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4またはMOVを追加して、壁紙に設定しましょう。"
+            "value" : "MP4またはMOVファイルを追加…"
           }
         }
       }
@@ -96,18 +96,34 @@
         }
       }
     },
-    "Add MP4 or MOV Files…" : {
+    "Add Videos" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add MP4 or MOV Files…"
+            "value" : "Add Videos"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4またはMOVファイルを追加…"
+            "value" : "動画を追加"
+          }
+        }
+      }
+    },
+    "Add an MP4 or MOV, then set it as your wallpaper." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add an MP4 or MOV, then set it as your wallpaper."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MP4またはMOVを追加して、壁紙に設定しましょう。"
           }
         }
       }
@@ -128,23 +144,8 @@
         }
       }
     },
-    "Add Videos" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Videos"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "動画を追加"
-          }
-        }
-      }
-    },
     "All connected displays" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -226,22 +227,6 @@
         }
       }
     },
-    "Choose a playable MP4 or MOV with a video track and a finite duration." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a playable MP4 or MOV with a video track and a finite duration."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "映像が含まれている、再生可能なMP4またはMOVファイルを選択してください。再生時間が確定している必要があります。"
-          }
-        }
-      }
-    },
     "Choose Files…" : {
       "localizations" : {
         "en" : {
@@ -254,6 +239,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイルを選択…"
+          }
+        }
+      }
+    },
+    "Choose a playable MP4 or MOV with a video track and a finite duration." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a playable MP4 or MOV with a video track and a finite duration."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "映像が含まれている、再生可能なMP4またはMOVファイルを選択してください。再生時間が確定している必要があります。"
           }
         }
       }
@@ -535,6 +536,7 @@
       }
     },
     "Displays" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -551,6 +553,7 @@
       }
     },
     "Fill screen" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -586,19 +589,19 @@
         }
       }
     },
-    "Import an MP4 or MOV, then set it as your wallpaper." : {
+    "Import MP4 or MOV Files…" : {
       "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import an MP4 or MOV, then set it as your wallpaper."
+            "value" : "Import MP4 or MOV Files…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4またはMOVファイルを読み込んで、壁紙に設定しましょう。"
+            "value" : "MP4またはMOVファイルを読み込む…"
           }
         }
       }
@@ -620,19 +623,19 @@
         }
       }
     },
-    "Import MP4 or MOV Files…" : {
+    "Import an MP4 or MOV, then set it as your wallpaper." : {
       "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import MP4 or MOV Files…"
+            "value" : "Import an MP4 or MOV, then set it as your wallpaper."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MP4またはMOVファイルを読み込む…"
+            "value" : "MP4またはMOVファイルを読み込んで、壁紙に設定しましょう。"
           }
         }
       }
@@ -883,6 +886,23 @@
         }
       }
     },
+    "Only on Main Display" : {
+      "comment" : "Setting to restrict wallpaper playback to the main display.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only on Main Display"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メインディスプレイのみ"
+          }
+        }
+      }
+    },
     "Open Login Items Settings" : {
       "localizations" : {
         "en" : {
@@ -895,6 +915,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ログイン項目の設定を開く"
+          }
+        }
+      }
+    },
+    "PINNED" : {
+      "comment" : "Pinned videos section heading.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PINNED"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留め"
           }
         }
       }
@@ -981,20 +1019,19 @@
         }
       }
     },
-    "PINNED" : {
-      "comment" : "Pinned videos section heading.",
-      "extractionState" : "stale",
+    "Play wallpaper video only on the main display. Leave off to show on all connected displays." : {
+      "comment" : "Explanation for the setting that restricts wallpaper playback to the main display.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "PINNED"
+            "value" : "Play wallpaper video only on the main display. Leave off to show on all connected displays."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ピン留め"
+            "value" : "壁紙動画をメインディスプレイにのみ再生します。オフにすると接続されているすべてのディスプレイに表示されます。"
           }
         }
       }
@@ -1130,23 +1167,6 @@
         }
       }
     },
-    "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched." : {
-      "comment" : "The placeholder is the user-provided video filename without its extension.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "「%@」をライブラリから削除しますか？Loopmuralのコピーだけが削除されます。元の動画ファイルは削除されません。"
-          }
-        }
-      }
-    },
     "Remove %@ from library" : {
       "comment" : "The placeholder is the user-provided video filename without its extension.",
       "extractionState" : "stale",
@@ -1161,6 +1181,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "「%@」をライブラリから削除"
+          }
+        }
+      }
+    },
+    "Remove from Library…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from Library…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリから削除…"
           }
         }
       }
@@ -1182,22 +1218,6 @@
         }
       }
     },
-    "Remove from Library…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove from Library…"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ライブラリから削除…"
-          }
-        }
-      }
-    },
     "Remove video?" : {
       "localizations" : {
         "en" : {
@@ -1210,6 +1230,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "動画を削除しますか？"
+          }
+        }
+      }
+    },
+    "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched." : {
+      "comment" : "The placeholder is the user-provided video filename without its extension.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove “%@” from your library? Only Loopmural’s copy is deleted. Your original video stays untouched."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」をライブラリから削除しますか？Loopmuralのコピーだけが削除されます。元の動画ファイルは削除されません。"
           }
         }
       }
@@ -1352,12 +1389,12 @@
         }
       }
     },
-    "Set as wallpaper" : {
+    "Set Wallpaper" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set as wallpaper"
+            "value" : "Set Wallpaper"
           }
         },
         "ja" : {
@@ -1384,12 +1421,12 @@
         }
       }
     },
-    "Set Wallpaper" : {
+    "Set as wallpaper" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set Wallpaper"
+            "value" : "Set as wallpaper"
           }
         },
         "ja" : {
@@ -1417,6 +1454,7 @@
       }
     },
     "Sizing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1774,19 +1812,20 @@
         }
       }
     },
-    "Video actions" : {
-      "comment" : "Tooltip for the video item menu.",
+    "VIDEOS" : {
+      "comment" : "Main video library section heading.",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video actions"
+            "value" : "VIDEOS"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "動画の操作"
+            "value" : "動画"
           }
         }
       }
@@ -1803,6 +1842,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "動画コピーの使用容量"
+          }
+        }
+      }
+    },
+    "Video actions" : {
+      "comment" : "Tooltip for the video item menu.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video actions"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画の操作"
           }
         }
       }
@@ -1835,24 +1891,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "動画を再生できませんでした。"
-          }
-        }
-      }
-    },
-    "VIDEOS" : {
-      "comment" : "Main video library section heading.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VIDEOS"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "動画"
           }
         }
       }
@@ -1939,22 +1977,6 @@
         }
       }
     },
-    "Your desktop, brought to life" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your desktop, brought to life"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "デスクトップに動きを"
-          }
-        }
-      }
-    },
     "YOUR VIDEOS" : {
       "localizations" : {
         "en" : {
@@ -1967,6 +1989,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "動画ライブラリ"
+          }
+        }
+      }
+    },
+    "Your desktop, brought to life" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your desktop, brought to life"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デスクトップに動きを"
           }
         }
       }
